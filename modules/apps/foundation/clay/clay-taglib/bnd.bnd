@@ -1,0 +1,14 @@
+Bundle-Name: Liferay Clay Taglib
+Bundle-SymbolicName: com.liferay.clay.taglib
+Bundle-Version: 1.0.0
+Liferay-Releng-Module-Group-Description:
+Liferay-Releng-Module-Group-Title: Frontend Infrastructure
+Provide-Capability:\
+	osgi.extender;\
+		osgi.extender="jsp.taglib";\
+		uri="http://liferay.com/tld/clay";\
+		version:Version="${Bundle-Version}",\
+	soy;\
+		type="clay-taglib";\
+		version:Version="${Bundle-Version}"
+Web-ContextPath: /clay-taglib
