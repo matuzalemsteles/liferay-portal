@@ -1,0 +1,24 @@
+{
+	"dependencies": {
+		"clay-alert": "^1.0.0-alpha.1",
+		"clay-badge": "^1.0.0-alpha.1",
+		"clay-button": "^1.0.0-alpha.1",
+		"clay-checkbox": "^1.0.0-alpha.1",
+		"clay-collapse": "^1.0.0-alpha.1",
+		"clay-dropdown": "^1.0.0-alpha.1",
+		"clay-icon": "^1.0.0-alpha.1",
+		"clay-label": "^1.0.0-alpha.1",
+		"clay-link": "^1.0.0-alpha.1",
+		"clay-navbar": "^1.0.0-alpha.1",
+		"clay-progress-bar": "^1.0.0-alpha.1",
+		"clay-radio": "^1.0.0-alpha.1",
+		"clay-select": "^1.0.0-alpha.1",
+		"clay-sticker": "^1.0.0-alpha.1"
+	},
+	"devDependencies": {
+		"liferay-module-config-generator": "^1.3.2",
+		"metal-cli": "^4.3.3"
+	},
+	"name": "clay-taglib",
+	"version": "1.0.0"
+}

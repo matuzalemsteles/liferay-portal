@@ -16,88 +16,46 @@
 
 <%@ include file="/init.jsp" %>
 
-<div id="<portlet:namespace />pad" style="background: <%= HtmlUtil.escapeAttribute(color) %>;">
-	<c:if test="<%= portletDisplay.isShowConfigurationIcon() %>">
-		<table width="100%">
-			<tr>
-				<td width="60%">
-					<div class="portlet-title-default">&nbsp;</div>
-				</td>
-				<td>
-					<c:if test="<%= portletDisplay.isShowCloseIcon() %>">
-						<liferay-ui:icon
-							cssClass="close-note"
-							iconCssClass="icon-remove"
-							message="close"
-							url="<%= portletDisplay.getURLClose() %>"
-						/>
-					</c:if>
+<h1>Clay ActionsDropdown</h1>
 
-					<span class="note-color yellow"></span>
-					<span class="green note-color"></span>
-					<span class="blue note-color"></span>
-					<span class="note-color red"></span>
-				</td>
-			</tr>
-		</table>
-	</c:if>
+<!-- TODO -->
 
-	<div class="note-content" id="<portlet:namespace />note"><%= StringUtil.replace(HtmlUtil.escape(data), "&lt;br /&gt;", "<br />") %></div>
-</div>
+<h1>Clay Alert</h1>
 
-<c:if test="<%= portletDisplay.isShowConfigurationIcon() %>">
-	<aui:script use="aui-editable-deprecated,aui-io-request">
-		var quickNotePad = A.one('#<portlet:namespace />pad');
+<!-- TODO -->
 
-		if (quickNotePad) {
-			quickNotePad.all('.note-color').on(
-				'click',
-				function(event) {
-					var box = event.currentTarget;
+<h1>Clay Badge</h1>
 
-					var bgColor = box.getStyle('backgroundColor');
+<clay:badge label="hello clay!!" />
+<clay:badge label="success clay!!" style="success" />
 
-					quickNotePad.setStyle('backgroundColor', bgColor);
+<h1>Clay Button</h1>
 
-					<portlet:actionURL name="save" var="saveURL" />
+<%
+Map<String, Object> buttonIcon = new HashMap<>();
+buttonIcon.put("symbol", "plus");
+%>
+<clay:button label="My Button" />
+<clay:button icon="<%= buttonIcon %>" label="My Button" />
 
-					A.io.request(
-						'<%= saveURL %>',
-						{
-							data: {
-								<portlet:namespace />color: bgColor
-							}
-						}
-					);
-				}
-			);
-		}
+<h1>Clay Checkbox</h1>
 
-		new A.Editable(
-			{
-				inputType: 'textarea',
-				node: '#<portlet:namespace />note',
-				on: {
-					contentTextChange: function(event) {
-						var instance = this;
+<clay:checkbox label="My Checkbox" />
 
-						if (!event.initial) {
-							var newValue = event.newVal.replace(/\n/gi, '<br />');
+<h1>Clay Dropdown</h1>
 
-							event.newVal = instance._toText(event.newVal);
+<!-- TODO -->
 
-							A.io.request(
-								'<%= saveURL %>',
-								{
-									data: {
-										<portlet:namespace />data: newValue
-									}
-								}
-							);
-						}
-					}
-				}
-			}
-		);
-	</aui:script>
-</c:if>
+<h1>Clay Icon</h1>
+
+<clay:icon symbol="adjust" />
+<clay:icon symbol="archive" />
+<clay:icon symbol="columns" />
+<clay:icon symbol="dynamic-data-list" />
+<clay:icon symbol="exclamation-circle" />
+<clay:icon symbol="mark-as-answer" />
+
+<h1>Clay Label</h1>
+
+<clay:label label="My Label" />
+<clay:label closeable="<%= true %>" label="My Label" />
