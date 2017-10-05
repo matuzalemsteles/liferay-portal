@@ -567,4 +567,52 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
+	<tag>
+		<description><![CDATA[]]></description>
+		<name>select</name>
+		<tag-class>com.liferay.clay.taglib.servlet.taglib.soy.SelectTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description></description>
+			<name>disabled</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>			
+		<attribute>
+			<description></description>
+			<name>label</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>multiple</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>name</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>options</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>			
+		<attribute>
+			<description></description>
+			<name>wrapperType</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
 </taglib>
