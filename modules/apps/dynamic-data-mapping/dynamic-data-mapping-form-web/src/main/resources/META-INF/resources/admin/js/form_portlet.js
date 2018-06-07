@@ -151,6 +151,8 @@ AUI.add(
 						);
 
 						if (instance._isFormView()) {
+							instance.bindNavigationBar();
+
 							instance._eventHandlers.push(
 								instance.after('autosave', instance._afterAutosave),
 								A.one(nameEditor.element.$).on('keydown', A.bind('handleEditorTitleKeydown', instance)),
@@ -158,9 +160,7 @@ AUI.add(
 								A.one(nameEditor.element.$).on('keypress', A.bind('handleEditorTitleCopyAndPaste', instance)),
 								instance.one('#preview').on('click', A.bind('_onPreviewButtonClick', instance)),
 								instance.one('#publish').on('click', A.bind('_onPublishButtonClick', instance)),
-								instance.one('#publishIcon').on('click', A.bind('_onPublishIconClick', instance)),
-								instance.one('#showForm').on('click', A.bind('_onFormButtonClick', instance)),
-								instance.one('#showRules').on('click', A.bind('_onRulesButtonClick', instance))
+								instance.one('#publishIcon').on('click', A.bind('_onPublishIconClick', instance))
 							);
 
 							var autosaveInterval = Liferay.DDM.FormSettings.autosaveInterval;
@@ -169,6 +169,28 @@ AUI.add(
 								instance._intervalId = setInterval(A.bind('_autosave', instance, true), autosaveInterval * MINUTE);
 							}
 						}
+					},
+
+					bindNavigationBar: function() {
+						var instance = this;
+
+						Liferay.componentReady('formsNavigationBar').then(
+							function(navigationBar) {
+								navigationBar.on(
+									'itemClicked',
+									function(event) {
+										var itemData = event.data.item.data;
+
+										if (itemData && itemData.action && ACTIONS[itemData.action]) {
+											if (itemData.action == 'showForm') {
+												instance._onFormButtonClick();
+											} else if (itemData.action == 'showRules') {
+												instance._onRulesButtonClick();
+											}
+										}
+									});
+							}
+						);
 					},
 
 					destructor: function() {
@@ -725,8 +747,6 @@ AUI.add(
 						instance.one('#formBuilder').hide();
 
 						A.one('.ddm-form-builder-buttons').addClass('hide');
-
-						instance.one('#showForm').removeClass('active');
 					},
 
 					_hideRuleBuilder: function() {
@@ -739,8 +759,6 @@ AUI.add(
 						var ruleBuilderAncestorNode = ruleBuilderNode.ancestor();
 
 						ruleBuilderAncestorNode.addClass('hide');
-
-						instance.one('#showRules').removeClass('active');
 
 						A.one('.portlet-forms').removeClass('liferay-ddm-form-rule-builder');
 					},
@@ -1030,8 +1048,6 @@ AUI.add(
 						A.one('.ddm-form-builder-buttons').removeClass('hide');
 
 						A.one('.lfr-ddm-plus-button').removeClass('hide');
-
-						instance.one('#showForm').addClass('active');
 					},
 
 					_showRuleBuilder: function() {
@@ -1055,8 +1071,6 @@ AUI.add(
 						}
 
 						A.one('.portlet-forms').addClass('liferay-ddm-form-rule-builder');
-
-						instance.one('#showRules').addClass('active');
 					},
 
 					_syncDescription: function() {
