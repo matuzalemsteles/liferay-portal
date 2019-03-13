@@ -11,6 +11,7 @@
 		}
 	},
 	"dependencies": {
+		"history": "^4.7.2",
 		"metal": "^2.4.7",
 		"metal-dom": "^2.4.7",
 		"metal-uri": "^2.0.2",

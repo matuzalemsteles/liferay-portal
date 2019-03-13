@@ -11,6 +11,9 @@ import ActionURLScreen from './screen/ActionURLScreen.es';
 import App from './app/App.es';
 import RenderURLScreen from './screen/RenderURLScreen.es';
 
+import ReachRouterHistory from './routers/ReachRouter.es';
+import ReactRouterHistory from './routers/ReactRouter.es';
+
 /**
  * Initializes a Senna App with routes that match both ActionURLs and RenderURLs.
  * It also overrides Liferay's default Liferay.Util.submitForm to makes sure
@@ -97,6 +100,15 @@ let initSPA = function() {
 	};
 
 	Liferay.initComponentCache();
+
+	// Layer to expose the history manipulation APIs of the compatible
+	// route libraries with integration with Senna.js.
+	// WARNING:  API is unstable and can be modified at any time.
+
+	Liferay.SPA.unstable_history = {
+		ReachRouter: ReachRouterHistory(app),
+		ReactRouter: ReactRouterHistory(app)
+	};
 
 	Liferay.SPA.app = app;
 	Liferay.SPA.version = version;
