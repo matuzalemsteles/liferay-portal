@@ -314,6 +314,11 @@
 		padding-right: 0;
 		width: auto;
 
+		.form-builder-page-header-description:-ms-input-placeholder,
+		.form-builder-page-header-title:-ms-input-placeholder {
+			color: #000000 !important;
+		}
+
 		.form-builder-page-header-description,
 		.form-builder-page-header-title {
 			display: block;

@@ -52,6 +52,15 @@ class FormBuilder extends Component {
 		editingLanguageId: Config.string(),
 
 		/**
+		 * @default []
+		 * @instance
+		 * @memberof Sidebar
+		 * @type {?(array|undefined)}
+		 */
+
+		fieldTypes: Config.array().value([]),
+
+		/**
 		 * @default {}
 		 * @instance
 		 * @memberof FormBuilder
@@ -83,7 +92,16 @@ class FormBuilder extends Component {
 		 * @type {string}
 		 */
 
-		rules: Config.arrayOf(ruleStructure).required()
+		rules: Config.arrayOf(ruleStructure).required(),
+
+		/**
+		 * @default undefined
+		 * @instance
+		 * @memberof FormRenderer
+		 * @type {!string}
+		 */
+
+		spritemap: Config.string().required()
 	};
 
 	attached() {
@@ -347,7 +365,7 @@ class FormBuilder extends Component {
 			}
 		};
 
-		const addedToPlaceholder = ![...event.data.target.parentElement.parentElement.classList].includes('position-relative');
+		const addedToPlaceholder = !event.data.target.parentElement.parentElement.classList.contains('position-relative');
 
 		dispatch(
 			'fieldAdded',
