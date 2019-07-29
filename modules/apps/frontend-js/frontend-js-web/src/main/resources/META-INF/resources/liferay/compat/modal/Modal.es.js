@@ -149,7 +149,11 @@ class Modal extends Component {
 	 */
 
 	_handleDocumentFocus(event) {
-		if (this.overlay && !this.element.contains(event.target)) {
+		if (
+			this.overlay &&
+			event.target !== this.refs.modalDialog &&
+			!this.refs.modalDialog.contains(event.target)
+		) {
 			this._autoFocus('.modal-dialog');
 		}
 	}
