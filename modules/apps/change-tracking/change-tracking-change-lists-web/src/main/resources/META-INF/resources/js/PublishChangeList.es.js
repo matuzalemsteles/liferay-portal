@@ -16,6 +16,7 @@ class PublishChangeList extends Component {
 
 	_handleCloseDialogClick(event) {
 		this.refs.modal.visible = false;
+		this.emit('close');
 	}
 
 	_handlePublishClick(event) {

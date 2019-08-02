@@ -14,6 +14,11 @@ function openPublishChangeList({
 		changeListDescription: changeListDescription,
 		changeListHasCollision: changeListHasCollision,
 		changeListName: changeListName,
+		events: {
+			close: function(event) {
+				event.target.dispose();
+			},
+		},
 		spritemap: spritemap,
 		urlChangeListsHistory: urlChangeListsHistory,
 		urlCheckoutProduction: urlCheckoutProduction,

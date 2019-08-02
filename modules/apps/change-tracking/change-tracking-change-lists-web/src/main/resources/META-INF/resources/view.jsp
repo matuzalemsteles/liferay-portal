@@ -544,4 +544,12 @@ renderResponse.setTitle(LanguageUtil.get(request, "select-change-list"));
 			);
 		}
 	);
+
+	function removeListener() {
+		publishClickHandler.removeListener();
+
+		Liferay.detach('destroyPortlet', removeListener);
+	}
+
+	Liferay.on('destroyPortlet', removeListener);
 </aui:script>
