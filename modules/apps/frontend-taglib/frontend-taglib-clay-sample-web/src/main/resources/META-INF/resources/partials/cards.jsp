@@ -278,7 +278,7 @@ String SVG_FILE_TITLE = "lexicon.icon.camera.svg";
 			initials="HS"
 			name="User Name"
 			subtitle="Latest Action"
-			userColorCssClass="danger"
+			userColorClass="danger"
 		/>
 	</div>
 
