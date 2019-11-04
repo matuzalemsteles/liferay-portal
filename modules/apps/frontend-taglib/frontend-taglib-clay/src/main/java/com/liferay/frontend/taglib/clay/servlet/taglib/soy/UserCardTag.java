@@ -64,8 +64,8 @@ public class UserCardTag extends BaseClayCardTag {
 		super.setBaseClayCard(userCard);
 	}
 
-	public void setUserColorCssClass(String userColorCssClass) {
-		putValue("userColorClass", userColorCssClass);
+	public void setUserColorClass(String userColorClass) {
+		putValue("userColorClass", userColorClass);
 	}
 
 	private void _populateContext() {
@@ -87,8 +87,8 @@ public class UserCardTag extends BaseClayCardTag {
 			setSubtitle(_userCard.getSubtitle());
 		}
 
-		if (context.get("userCssColorClass") == null) {
-			setUserColorCssClass(_userCard.getUserColorCssClass());
+		if (context.get("userColorClass") == null) {
+			setUserColorClass(_userCard.getUserColorClass());
 		}
 	}
 
