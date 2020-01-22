@@ -33,6 +33,7 @@ import {LAYOUT_DATA_ITEM_TYPES} from '../../config/constants/layoutDataItemTypes
 import TopperEmpty from '../TopperEmpty';
 
 const Root = React.forwardRef(({children, item, layoutData}, ref) => {
+	const childrenCount = React.Children.count(children);
 	return (
 		<TopperEmpty
 			acceptDrop={[
@@ -48,11 +49,12 @@ const Root = React.forwardRef(({children, item, layoutData}, ref) => {
 				<div
 					className={classNames('page-editor__root', {
 						'page-editor__root--active':
-							isOver && canDrop && !React.Children.count(children)
+							isOver && canDrop && !childrenCount,
+						'page-editor__root--empty': !childrenCount
 					})}
 					ref={ref}
 				>
-					{React.Children.count(children) ? (
+					{childrenCount ? (
 						children
 					) : (
 						<div className="taglib-empty-result-message">
