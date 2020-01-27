@@ -31,6 +31,7 @@ const ContainerWithControls = React.forwardRef(
 					LAYOUT_DATA_ITEM_TYPES.fragment,
 					LAYOUT_DATA_ITEM_TYPES.row
 				]}
+				dropNestedAndSibling
 				item={item}
 				layoutData={layoutData}
 				name={Liferay.Language.get('container')}
