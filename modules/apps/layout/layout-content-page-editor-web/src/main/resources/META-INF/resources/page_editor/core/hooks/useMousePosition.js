@@ -13,21 +13,24 @@
  */
 
 import {useEventListener} from 'frontend-js-react-web';
+import {useCallback, useState} from 'react';
 
-export default function useOnClickOutside(elements, handler) {
-	const listener = event => {
-		if (
-			!elements.some(element => {
-				if (typeof element === 'object' && element !== null) {
-					element = element.current;
-				}
-				return element && element.contains(event.target);
-			})
-		) {
-			handler(event);
-		}
-	};
+export default function useMousePosition() {
+	const [position, setPosition] = useState({
+		mouseX: null,
+		mouseY: null
+	});
 
-	useEventListener('mousedown', listener, false, document);
-	useEventListener('touchstart', listener, false, document);
+	const handleMouseMoveSafe = useCallback(
+		event =>
+			setPosition({
+				mouseX: event.clientX,
+				mouseY: event.clientY
+			}),
+		[]
+	);
+
+	useEventListener('mousemove', handleMouseMoveSafe, false, window);
+
+	return position;
 }

@@ -12,22 +12,15 @@
  * details.
  */
 
-import {useEventListener} from 'frontend-js-react-web';
+import React from 'react';
+import {createPortal} from 'react-dom';
 
-export default function useOnClickOutside(elements, handler) {
-	const listener = event => {
-		if (
-			!elements.some(element => {
-				if (typeof element === 'object' && element !== null) {
-					element = element.current;
-				}
-				return element && element.contains(event.target);
-			})
-		) {
-			handler(event);
-		}
-	};
-
-	useEventListener('mousedown', listener, false, document);
-	useEventListener('touchstart', listener, false, document);
+export function FragmentsEditorShim() {
+	return createPortal(
+		<div
+			className="fixed-top fragments-editor-shim h-100 w-100"
+			role="presentation"
+		/>,
+		document.body
+	);
 }

@@ -13,18 +13,154 @@
  */
 
 import classNames from 'classnames';
-import React from 'react';
+import dom from 'metal-dom';
+import React, {useCallback, useContext, useRef, useState} from 'react';
 
+import updateColSize from '../../actions/updateColSize';
 import {LAYOUT_DATA_ITEM_DEFAULT_CONFIGURATIONS} from '../../config/constants/layoutDataItemDefaultConfigurations';
 import {LAYOUT_DATA_ITEM_TYPES} from '../../config/constants/layoutDataItemTypes';
+import {ConfigContext} from '../../config/index';
+import {useDispatch, useSelector} from '../../store/index';
+import resizeColumns from '../../thunks/resizeColumns';
+import ColumnOverlayGrid from './ColumnOverlayGrid';
+import ResizingContext from './ResizingContext';
+
+const TOTAL_NUMBER_OF_COLUMNS = 12;
+
+function getGridRanges(colWidth) {
+	return [...Array(TOTAL_NUMBER_OF_COLUMNS).keys()].reduce(
+		(acc, current, index) => {
+			if (index === 0) {
+				return acc;
+			}
+
+			return [...acc, acc[current - 1] + colWidth];
+		},
+		[colWidth]
+	);
+}
+
+function getColumnAccumulationSizes(rowChildren, layoutData) {
+	return rowChildren.reduce(
+		(acc, currentId, index) => {
+			if (index === 0) {
+				return acc;
+			}
+
+			return [
+				...acc,
+				acc[index - 1] + layoutData.items[currentId].config.size
+			];
+		},
+		[layoutData.items[rowChildren[0]].config.size]
+	);
+}
+
+function getClosestGridIndexPosition(mousePosition, gridSizes) {
+	const closest = gridSizes.reduce((prev, curr) =>
+		Math.abs(curr - mousePosition) < Math.abs(prev - mousePosition)
+			? curr
+			: prev
+	);
+
+	return gridSizes.indexOf(closest);
+}
+
+function getGridSizes(rowOffsetWidth) {
+	const colWidth = Math.floor(rowOffsetWidth / TOTAL_NUMBER_OF_COLUMNS);
+
+	return getGridRanges(colWidth);
+}
 
 const Row = React.forwardRef(({children, className, item, layoutData}, ref) => {
 	const {gutters} = {
 		...LAYOUT_DATA_ITEM_DEFAULT_CONFIGURATIONS[LAYOUT_DATA_ITEM_TYPES.row],
 		...item.config
 	};
-
 	const parent = layoutData.items[item.parentId];
+	const config = useContext(ConfigContext);
+	const dispatch = useDispatch();
+	const store = useSelector(state => state);
+	const rowRef = useRef(null);
+
+	const [highlightedColumn, setHighLightedColumn] = useState(0);
+	const [showOverlay, setShowOverlay] = useState(false);
+
+	function onResizeStart() {
+		setShowOverlay(true);
+	}
+
+	const onResizing = useCallback(
+		({clientX}, columnInfo) => {
+			if (rowRef.current) {
+				// memoize!
+				const gridSizes = getGridSizes(rowRef.current.offsetWidth);
+
+				const sectionRef = dom.closest(
+					rowRef.current,
+					'.container, .container-fluid'
+				);
+
+				const mousePosition = clientX - sectionRef.offsetLeft;
+
+				const index = getClosestGridIndexPosition(
+					mousePosition,
+					gridSizes
+				);
+
+				if (highlightedColumn !== index) {
+					setHighLightedColumn(index);
+				}
+
+				const columnSizes = getColumnAccumulationSizes(
+					item.children,
+					layoutData
+				);
+
+				const {
+					colIndex,
+					currentColumn,
+					currentColumnConfig,
+					nextColumn,
+					nextColumnIndex
+				} = columnInfo;
+
+				const currentRange = columnSizes[colIndex];
+				const nextRange = columnSizes[nextColumnIndex];
+
+				const addedIndex = index + 1;
+
+				const newCurrentSize =
+					currentColumnConfig.size + (addedIndex - currentRange);
+
+				const newNextSize = nextRange - addedIndex;
+
+				if (newCurrentSize >= 1 && newNextSize >= 1) {
+					dispatch(
+						updateColSize({
+							itemId: currentColumn.itemId,
+							nextColumnItemId: nextColumn.itemId,
+							nextColumnSize: newNextSize,
+							size: newCurrentSize
+						})
+					);
+				}
+			}
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[dispatch]
+	);
+
+	const onResizeEnd = useCallback(() => {
+		setHighLightedColumn(0);
+		setShowOverlay(false);
+
+		resizeColumns({
+			config,
+			layoutData: store.layoutData,
+			store
+		});
+	}, [config, store]);
 
 	const rowContent = (
 		<div
@@ -34,9 +170,31 @@ const Row = React.forwardRef(({children, className, item, layoutData}, ref) => {
 				),
 				'no-gutters': !gutters
 			})}
-			ref={ref}
+			ref={node => {
+				if (node) {
+					rowRef.current = node;
+
+					if (ref) {
+						ref.current = node;
+					}
+				}
+			}}
 		>
-			{children}
+			<ResizingContext.Provider
+				value={{
+					onResizeEnd,
+					onResizeStart,
+					onResizing
+				}}
+			>
+				{children}
+			</ResizingContext.Provider>
+			{showOverlay && (
+				<ColumnOverlayGrid
+					columnSpacing={gutters}
+					highlightedColumn={highlightedColumn}
+				/>
+			)}
 		</div>
 	);
 

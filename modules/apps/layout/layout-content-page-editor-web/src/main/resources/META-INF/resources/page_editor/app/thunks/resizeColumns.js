@@ -12,22 +12,22 @@
  * details.
  */
 
-import {useEventListener} from 'frontend-js-react-web';
+import updateLayoutData from '../actions/updateLayoutData';
+import LayoutService from '../services/LayoutService';
 
-export default function useOnClickOutside(elements, handler) {
-	const listener = event => {
-		if (
-			!elements.some(element => {
-				if (typeof element === 'object' && element !== null) {
-					element = element.current;
-				}
-				return element && element.contains(event.target);
-			})
-		) {
-			handler(event);
-		}
+export default function resizeColumns({config, layoutData, store}) {
+	return dispatch => {
+		const {segmentsExperienceId} = store;
+
+		return LayoutService.updateLayoutData({
+			config,
+			layoutData,
+			onNetworkStatus: dispatch,
+			segmentsExperienceId
+		}).then(({deletedFragmentEntryLinkIds, layoutData}) => {
+			dispatch(
+				updateLayoutData({deletedFragmentEntryLinkIds, layoutData})
+			);
+		});
 	};
-
-	useEventListener('mousedown', listener, false, document);
-	useEventListener('touchstart', listener, false, document);
 }

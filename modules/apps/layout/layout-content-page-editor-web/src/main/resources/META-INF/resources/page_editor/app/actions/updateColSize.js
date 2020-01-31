@@ -12,22 +12,19 @@
  * details.
  */
 
-import {useEventListener} from 'frontend-js-react-web';
+import {UPDATE_COL_SIZE} from './types';
 
-export default function useOnClickOutside(elements, handler) {
-	const listener = event => {
-		if (
-			!elements.some(element => {
-				if (typeof element === 'object' && element !== null) {
-					element = element.current;
-				}
-				return element && element.contains(event.target);
-			})
-		) {
-			handler(event);
-		}
+export default function updateColSize({
+	itemId,
+	nextColumnItemId,
+	nextColumnSize,
+	size
+}) {
+	return {
+		itemId,
+		nextColumnItemId,
+		nextColumnSize,
+		size,
+		type: UPDATE_COL_SIZE
 	};
-
-	useEventListener('mousedown', listener, false, document);
-	useEventListener('touchstart', listener, false, document);
 }

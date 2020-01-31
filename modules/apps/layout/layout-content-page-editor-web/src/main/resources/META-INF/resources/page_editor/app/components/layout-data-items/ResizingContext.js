@@ -12,22 +12,9 @@
  * details.
  */
 
-import {useEventListener} from 'frontend-js-react-web';
+import React from 'react';
 
-export default function useOnClickOutside(elements, handler) {
-	const listener = event => {
-		if (
-			!elements.some(element => {
-				if (typeof element === 'object' && element !== null) {
-					element = element.current;
-				}
-				return element && element.contains(event.target);
-			})
-		) {
-			handler(event);
-		}
-	};
+const ResizingContext = React.createContext();
 
-	useEventListener('mousedown', listener, false, document);
-	useEventListener('touchstart', listener, false, document);
-}
+export {ResizingContext};
+export default ResizingContext;

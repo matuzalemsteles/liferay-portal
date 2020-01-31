@@ -68,7 +68,7 @@ export default function PageEditor({withinMasterPage = false}) {
 	);
 }
 
-function LayoutDataItem({fragmentEntryLinks, item, layoutData}) {
+function LayoutDataItem({fragmentEntryLinks, item, layoutData, ...otherProps}) {
 	const Component = LAYOUT_DATA_ITEMS[item.type];
 	const isActive = useIsActive()(item.itemId);
 	const isMounted = useIsMounted();
@@ -89,6 +89,7 @@ function LayoutDataItem({fragmentEntryLinks, item, layoutData}) {
 			{item.children.map(childId => {
 				return (
 					<LayoutDataItem
+						{...otherProps}
 						fragmentEntryLinks={fragmentEntryLinks}
 						item={layoutData.items[childId]}
 						key={childId}
