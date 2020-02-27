@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
-import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.util.Portal;
 
 import org.osgi.service.component.annotations.Component;
@@ -161,9 +160,6 @@ public class DataDefinitionModelResourcePermission
 
 	@Reference
 	private DDMStructureLocalService _ddmStructureLocalService;
-
-	@Reference
-	private GroupLocalService _groupLocalService;
 
 	@Reference
 	private Portal _portal;
