@@ -18,7 +18,9 @@ import com.liferay.data.engine.content.type.DataDefinitionContentType;
 import com.liferay.journal.constants.JournalConstants;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
 import com.liferay.portal.kernel.util.Portal;
 
@@ -48,6 +50,48 @@ public class JournalDataDefinitionContentType
 	@Override
 	public String getPortletResourceName() {
 		return JournalConstants.RESOURCE_NAME;
+	}
+
+	@Override
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long companyId, long groupId,
+			String resourceName, long primKey, long userId, String actionId)
+		throws PortalException {
+
+		if (_portletResourcePermission.contains(
+				PermissionThreadLocal.getPermissionChecker(), groupId,
+				ActionKeys.MANAGE)) {
+
+			return true;
+		}
+
+		if (permissionChecker.hasOwnerPermission(
+				companyId, resourceName, primKey, userId, actionId)) {
+
+			return true;
+		}
+
+		if (actionId.equals("ADD_DATA_RECORD") ||
+			actionId.equals("UPDATE_DATA_RECORD")) {
+
+			return permissionChecker.hasPermission(
+				groupId, resourceName, primKey, ActionKeys.UPDATE);
+		}
+
+		if (actionId.equals("DELETE_DATA_RECORD")) {
+			return permissionChecker.hasPermission(
+				groupId, resourceName, primKey, ActionKeys.DELETE);
+		}
+
+		if (actionId.equals("EXPORT_DATA_RECORDS") ||
+			actionId.equals("VIEW_DATA_RECORD")) {
+
+			return permissionChecker.hasPermission(
+				groupId, resourceName, primKey, ActionKeys.VIEW);
+		}
+
+		return permissionChecker.hasPermission(
+			groupId, resourceName, primKey, actionId);
 	}
 
 	@Override
