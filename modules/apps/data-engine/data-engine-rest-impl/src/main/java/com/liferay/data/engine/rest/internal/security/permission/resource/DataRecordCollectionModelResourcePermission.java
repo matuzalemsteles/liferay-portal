@@ -14,6 +14,8 @@
 
 package com.liferay.data.engine.rest.internal.security.permission.resource;
 
+import com.liferay.data.engine.content.type.DataDefinitionContentType;
+import com.liferay.data.engine.rest.internal.content.type.DataDefinitionContentTypeTracker;
 import com.liferay.dynamic.data.lists.model.DDLRecordSet;
 import com.liferay.dynamic.data.lists.service.DDLRecordSetLocalService;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
@@ -69,21 +71,20 @@ public class DataRecordCollectionModelResourcePermission
 			String actionId)
 		throws PortalException {
 
-		String dataRecordCollectionModelResourceName = _getModelResourceName(
-			ddlRecordSet);
+		DDMStructure ddmStructure = ddlRecordSet.getDDMStructure();
 
-		if (permissionChecker.hasOwnerPermission(
-				ddlRecordSet.getCompanyId(),
-				dataRecordCollectionModelResourceName,
-				ddlRecordSet.getRecordSetId(), ddlRecordSet.getUserId(),
-				actionId)) {
+		DataDefinitionContentType dataDefinitionContentType =
+			_dataDefinitionContentTypeTracker.getDataDefinitionContentType(
+				ddmStructure.getClassNameId());
 
-			return true;
+		if (dataDefinitionContentType == null) {
+			return false;
 		}
 
-		return permissionChecker.hasPermission(
-			ddlRecordSet.getGroupId(), dataRecordCollectionModelResourceName,
-			ddlRecordSet.getRecordSetId(), actionId);
+		return dataDefinitionContentType.hasPermission(
+			permissionChecker, ddlRecordSet.getCompanyId(),
+			ddlRecordSet.getGroupId(), _getModelResourceName(ddlRecordSet),
+			ddlRecordSet.getRecordSetId(), ddlRecordSet.getUserId(), actionId);
 	}
 
 	@Override
@@ -116,6 +117,9 @@ public class DataRecordCollectionModelResourcePermission
 			_portal.getClassName(ddmStructure.getClassNameId()),
 			DDLRecordSet.class.getName());
 	}
+
+	@Reference
+	private DataDefinitionContentTypeTracker _dataDefinitionContentTypeTracker;
 
 	@Reference
 	private DDLRecordSetLocalService _ddlRecordSetLocalService;
