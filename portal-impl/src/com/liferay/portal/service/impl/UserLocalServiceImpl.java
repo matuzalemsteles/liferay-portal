@@ -4808,6 +4808,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 				null, ServiceContextThreadLocal.getServiceContext());
 		}
 
+		_invalidateTicket(user.getCompanyId(), User.class.getName(), userId);
+
 		return user;
 	}
 
@@ -4839,7 +4841,11 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		user.setPasswordModifiedDate(passwordModifiedDate);
 		user.setDigest(user.getDigest(password));
 
-		return userPersistence.update(user);
+		user = userPersistence.update(user);
+
+		_invalidateTicket(user.getCompanyId(), User.class.getName(), userId);
+
+		return user;
 	}
 
 	/**
@@ -6888,6 +6894,23 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		}
 
 		return localizedValueMap.get(fallbackLocale);
+	}
+
+	private void _invalidateTicket(
+			long companyId, String className, long classPK)
+		throws PortalException {
+
+		List<Ticket> tickets = ticketLocalService.getTickets(
+			companyId, className, classPK, TicketConstants.TYPE_PASSWORD);
+
+		for (Ticket ticket : tickets) {
+			if (!ticket.isExpired()) {
+				ticketLocalService.updateTicket(
+					ticket.getTicketId(), className, classPK,
+					TicketConstants.TYPE_PASSWORD, ticket.getExtraInfo(),
+					new Date());
+			}
+		}
 	}
 
 	private void _sendNotificationEmail(
