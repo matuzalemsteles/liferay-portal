@@ -12,8 +12,6 @@
  * details.
  */
 
-import './GridRegister.soy';
-
 import {ClayInput, ClayRadio} from '@clayui/form';
 import ClayTable from '@clayui/table';
 import React, {useState} from 'react';
@@ -75,17 +73,17 @@ const TableBodyColumns = ({
 
 const Grid = ({
 	columns = [{label: 'col1', value: 'fieldId'}],
-	disabled,
 	name,
 	onBlur = () => {},
 	onChange = () => {},
 	onFocus = () => {},
+	readOnly = false,
 	rows = [{label: 'row', value: 'jehf'}],
 	value,
 	...otherProps
 }) => (
 	<div className="table-responsive" {...otherProps}>
-		{!disabled &&
+		{!readOnly &&
 			rows.map((row, rowIndex) => {
 				const inputValue = value[row.value]
 					? `${row.value};${value[row.value]}`
@@ -141,10 +139,9 @@ const GridProxy = connectStore(
 		const [state, setState] = useState(value);
 
 		return (
-			<FieldBaseProxy name={name} readOnly={readOnly} {...otherProps}>
+			<FieldBaseProxy {...otherProps}>
 				<Grid
 					columns={columns}
-					disabled={readOnly}
 					name={name}
 					onBlur={event =>
 						emit('fieldBlurred', event, event.target.value)
@@ -164,6 +161,7 @@ const GridProxy = connectStore(
 					onFocus={event =>
 						emit('fieldFocused', event, event.target.value)
 					}
+					readOnly={readOnly}
 					rows={rows}
 					value={state}
 				/>
