@@ -52,7 +52,7 @@
 						),
 					},
 
-					<portlet:actionURL name="/polls/deleteQuestion" var="deleteQuestionURL">
+					<portlet:actionURL name="/polls/delete_question" var="deleteQuestionURL">
 						<portlet:param name="mvcPath" value="/view.jsp" />
 						<portlet:param name="redirect" value="<%= currentURL %>" />
 					</portlet:actionURL>

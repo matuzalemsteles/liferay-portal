@@ -36,7 +36,7 @@ import org.osgi.service.component.annotations.Reference;
 	property = {
 		"javax.portlet.name=" + PollsPortletKeys.POLLS,
 		"javax.portlet.name=" + PollsPortletKeys.POLLS_DISPLAY,
-		"mvc.command.name=/polls/deleteQuestion"
+		"mvc.command.name=/polls/delete_question"
 	},
 	service = MVCActionCommand.class
 )
