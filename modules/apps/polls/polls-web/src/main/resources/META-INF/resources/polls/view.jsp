@@ -22,10 +22,10 @@
 
 <div class="container-fluid container-fluid-max-xl main-content-body">
 	<aui:form method="post" name="fm">
+		<aui:input name="deleteQuestionIds" type="hidden" />
+
 		<liferay-ui:error exception="<%= DuplicateVoteException.class %>" message="you-may-only-vote-once" />
 		<liferay-ui:error exception="<%= NoSuchChoiceException.class %>" message="please-select-an-option" />
-
-		<aui:input name="deleteQuestionIds" type="hidden" />
 
 		<liferay-ui:search-container
 			cssClass="table-nowrap"
