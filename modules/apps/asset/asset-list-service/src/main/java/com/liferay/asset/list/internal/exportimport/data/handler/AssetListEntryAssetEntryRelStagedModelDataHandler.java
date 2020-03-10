@@ -25,9 +25,12 @@ import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandler;
 import com.liferay.exportimport.staged.model.repository.StagedModelRepository;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.segments.model.SegmentsEntry;
 
 import java.util.Map;
 
@@ -142,6 +145,27 @@ public class AssetListEntryAssetEntryRelStagedModelDataHandler
 		importedAssetListEntryAssetEntryRel.setAssetEntryUuid(
 			assetListEntryAssetEntryRel.getAssetEntryUuid());
 
+		Group currentGroup = _groupLocalService.fetchGroup(
+			portletDataContext.getScopeGroupId());
+
+		Map<Long, Long> segmentIds =
+			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
+				SegmentsEntry.class);
+
+		long assetListEntryIdSegmentId =
+			assetListEntryAssetEntryRel.getSegmentsEntryId();
+
+		if (!currentGroup.isStagingGroup() && !segmentIds.isEmpty() &&
+			(assetListEntryIdSegmentId > 0) &&
+			segmentIds.containsKey(assetListEntryIdSegmentId)) {
+
+			long newAssetListEntryIdSegmentId = segmentIds.get(
+				assetListEntryIdSegmentId);
+
+			importedAssetListEntryAssetEntryRel.setSegmentsEntryId(
+				newAssetListEntryIdSegmentId);
+		}
+
 		AssetListEntryAssetEntryRel existingAssetListEntryAssetEntryRel =
 			_stagedModelRepository.fetchStagedModelByUuidAndGroupId(
 				assetListEntryAssetEntryRel.getUuid(),
@@ -176,6 +200,9 @@ public class AssetListEntryAssetEntryRelStagedModelDataHandler
 
 	@Reference
 	private AssetEntryLocalService _assetEntryLocalService;
+
+	@Reference
+	private GroupLocalService _groupLocalService;
 
 	@Reference(
 		target = "(model.class.name=com.liferay.asset.list.model.AssetListEntryAssetEntryRel)"
