@@ -16,7 +16,6 @@ package com.liferay.polls.web.internal.portlet.action;
 
 import com.liferay.polls.constants.PollsPortletKeys;
 import com.liferay.polls.service.PollsQuestionService;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseTransactionalMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.util.ParamUtil;
