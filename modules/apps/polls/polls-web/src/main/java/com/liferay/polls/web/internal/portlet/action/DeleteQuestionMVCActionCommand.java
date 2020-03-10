@@ -43,10 +43,6 @@ import org.osgi.service.component.annotations.Reference;
 public class DeleteQuestionMVCActionCommand
 	extends BaseTransactionalMVCActionCommand {
 
-	protected void doDeleteQuestion(long questionId) throws PortalException {
-		_pollsQuestionService.deleteQuestion(questionId);
-	}
-
 	@Override
 	protected void doTransactionalCommand(
 			ActionRequest actionRequest, ActionResponse actionResponse)
@@ -65,7 +61,7 @@ public class DeleteQuestionMVCActionCommand
 		}
 
 		for (long deleteQuestionId : deleteQuestionIds) {
-			doDeleteQuestion(deleteQuestionId);
+			_pollsQuestionService.deleteQuestion(deleteQuestionId);
 		}
 	}
 
