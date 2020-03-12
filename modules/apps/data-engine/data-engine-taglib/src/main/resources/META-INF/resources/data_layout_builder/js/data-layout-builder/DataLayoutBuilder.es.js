@@ -17,6 +17,7 @@ import {PagesVisitor} from 'dynamic-data-mapping-form-renderer';
 import core from 'metal';
 import React from 'react';
 
+import {getDataDefinitionField} from '../utils/dataDefinition.es';
 import EventEmitter from './EventEmitter.es';
 import saveDefinitionAndLayout from './saveDefinitionAndLayout.es';
 
@@ -84,6 +85,21 @@ class DataLayoutBuilder extends React.Component {
 		}
 	}
 
+	componentWillUnmount() {
+		const {dataLayoutBuilderId} = this.props;
+		const {formBuilderWithLayoutProvider} = this;
+
+		if (formBuilderWithLayoutProvider) {
+			formBuilderWithLayoutProvider.dispose();
+		}
+
+		if (this._localeChangedHandler) {
+			this._localeChangedHandler.detach();
+		}
+
+		Liferay.destroyComponent(dataLayoutBuilderId);
+	}
+
 	dispatch(event, payload) {
 		const layoutProvider = this.getLayoutProvider();
 
@@ -101,41 +117,11 @@ class DataLayoutBuilder extends React.Component {
 		}
 	}
 
-	getState() {
-		const {appContext} = this.props;
-		const [state] = appContext;
-
-		return state;
-	}
-
-	on(eventName, listener) {
-		this.eventEmitter.on(eventName, listener);
-	}
-
-	removeEventListener(eventName, listener) {
-		this.eventEmitter.removeListener(eventName, listener);
-	}
-
 	emit(event, payload, error = false) {
 		this.eventEmitter.emit(event, payload, error);
 	}
 
-	componentWillUnmount() {
-		const {dataLayoutBuilderId} = this.props;
-		const {formBuilderWithLayoutProvider} = this;
-
-		if (formBuilderWithLayoutProvider) {
-			formBuilderWithLayoutProvider.dispose();
-		}
-
-		if (this._localeChangedHandler) {
-			this._localeChangedHandler.detach();
-		}
-
-		Liferay.destroyComponent(dataLayoutBuilderId);
-	}
-
-	getDefinitionAndLayout(pages) {
+	getDataDefinitionAndDataLayout(pages) {
 		const {
 			defaultLanguageId = themeDisplay.getDefaultLanguageId(),
 		} = this.props;
@@ -147,7 +133,7 @@ class DataLayoutBuilder extends React.Component {
 		const pagesVisitor = new PagesVisitor(pages);
 
 		const newPages = pagesVisitor.mapFields(field => {
-			fieldDefinitions.push(this.getDefinitionField(field));
+			fieldDefinitions.push(this.getDataDefinitionField(field));
 
 			return field.fieldName;
 		}, false);
@@ -184,11 +170,11 @@ class DataLayoutBuilder extends React.Component {
 		};
 	}
 
-	getDefinitionField({nestedFields = [], settingsContext}) {
+	getDataDefinitionField({nestedFields = [], settingsContext}) {
 		const fieldConfig = {
 			customProperties: {},
 			nestedDataDefinitionFields: nestedFields.map(nestedField =>
-				this.getDefinitionField(nestedField)
+				this.getDataDefinitionField(nestedField)
 			),
 		};
 		const settingsContextVisitor = new PagesVisitor(settingsContext.pages);
@@ -216,7 +202,7 @@ class DataLayoutBuilder extends React.Component {
 					if (this._isCustomProperty(fieldName)) {
 						fieldConfig.customProperties[
 							fieldName
-						] = this.getDefinitionFieldFormattedValue(
+						] = this.getDataDefinitionFieldFormattedValue(
 							dataType,
 							value
 						);
@@ -224,7 +210,7 @@ class DataLayoutBuilder extends React.Component {
 					else {
 						fieldConfig[
 							fieldName
-						] = this.getDefinitionFieldFormattedValue(
+						] = this.getDataDefinitionFieldFormattedValue(
 							dataType,
 							value
 						);
@@ -237,7 +223,7 @@ class DataLayoutBuilder extends React.Component {
 		return fieldConfig;
 	}
 
-	getDefinitionFieldFormattedValue(dataType, value) {
+	getDataDefinitionFieldFormattedValue(dataType, value) {
 		if (dataType === 'json' && typeof value !== 'string') {
 			return JSON.stringify(value);
 		}
@@ -245,7 +231,63 @@ class DataLayoutBuilder extends React.Component {
 		return value;
 	}
 
-	getFieldSettingsContext(dataDefinitionField) {
+	getDDMForm(
+		dataDefinition,
+		dataLayout = this.getDefaultDataLayout(dataDefinition)
+	) {
+		const {editingLanguageId = themeDisplay.getLanguageId()} = this.props;
+
+		return {
+			description: dataDefinition.description[editingLanguageId],
+			localizedDescription: dataDefinition.description,
+			localizedTitle: dataDefinition.name,
+			pages: dataLayout.dataLayoutPages.map(dataLayoutPage => ({
+				rows: dataLayoutPage.dataLayoutRows.map(dataLayoutRow => ({
+					columns: dataLayoutRow.dataLayoutColumns.map(
+						({columnSize, fieldNames}) => ({
+							fields: fieldNames.map(fieldName =>
+								this.getDDMFormField(dataDefinition, fieldName)
+							),
+							size: columnSize,
+						})
+					),
+				})),
+			})),
+			title: dataDefinition.name[editingLanguageId],
+		};
+	}
+
+	getDDMFormField(dataDefinition, fieldName) {
+		const dataDefinitionField = getDataDefinitionField(
+			dataDefinition,
+			fieldName
+		);
+		const {editingLanguageId = themeDisplay.getLanguageId()} = this.props;
+		const settingsContext = this.getDDMFormFieldSettingsContext(
+			dataDefinitionField
+		);
+
+		const ddmFormField = {settingsContext};
+		const visitor = new PagesVisitor(settingsContext.pages);
+
+		visitor.mapFields(field => {
+			const {fieldName} = field;
+			let {value} = field;
+
+			if (fieldName === 'options' && value) {
+				value = value[editingLanguageId];
+			}
+			else if (fieldName === 'name') {
+				ddmFormField.fieldName = value;
+			}
+
+			ddmFormField[fieldName] = value;
+		});
+
+		return ddmFormField;
+	}
+
+	getDDMFormFieldSettingsContext(dataDefinitionField) {
 		const {editingLanguageId = themeDisplay.getLanguageId()} = this.props;
 		const fieldTypes = this.getFieldTypes();
 		const fieldType = fieldTypes.find(({name}) => {
@@ -258,10 +300,10 @@ class DataLayoutBuilder extends React.Component {
 			...settingsContext,
 			pages: visitor.mapFields(field => {
 				const {fieldName, localizable} = field;
-				const propertyName = this._getDataDefinitionFieldPropertyName(
+				const propertyName = this._fromDDMFormToDataDefinitionPropertyName(
 					fieldName
 				);
-				const propertyValue = this._getDataDefinitionFieldPropertyValue(
+				const propertyValue = this._getDataDefinitionfieldPropertyValue(
 					dataDefinitionField,
 					propertyName
 				);
@@ -294,6 +336,25 @@ class DataLayoutBuilder extends React.Component {
 		};
 	}
 
+	getDefaultDataLayout(dataDefinition) {
+		const {dataDefinitionFields} = dataDefinition;
+
+		return {
+			dataLayoutPages: [
+				{
+					dataLayoutRows: dataDefinitionFields.map(({name}) => ({
+						dataLayoutColumns: [
+							{
+								columnSize: 12,
+								fieldNames: [name],
+							},
+						],
+					})),
+				},
+			],
+		};
+	}
+
 	getFieldTypes() {
 		const {fieldTypes} = this.props;
 
@@ -306,12 +367,27 @@ class DataLayoutBuilder extends React.Component {
 		return layoutProvider;
 	}
 
+	getState() {
+		const {appContext} = this.props;
+		const [state] = appContext;
+
+		return state;
+	}
+
 	getStore() {
 		const layoutProvider = this.getLayoutProvider();
 
 		return {
 			...layoutProvider.state,
 		};
+	}
+
+	on(eventName, listener) {
+		this.eventEmitter.on(eventName, listener);
+	}
+
+	removeEventListener(eventName, listener) {
+		this.eventEmitter.removeListener(eventName, listener);
 	}
 
 	render() {
@@ -331,7 +407,7 @@ class DataLayoutBuilder extends React.Component {
 		const {
 			definition: dataDefinition,
 			layout: dataLayout,
-		} = this.getDefinitionAndLayout(pages);
+		} = this.getDataDefinitionAndDataLayout(pages);
 
 		return saveDefinitionAndLayout({
 			contentType,
@@ -345,12 +421,44 @@ class DataLayoutBuilder extends React.Component {
 	}
 
 	serialize(pages) {
-		const {definition, layout} = this.getDefinitionAndLayout(pages);
+		const {definition, layout} = this.getDataDefinitionAndDataLayout(pages);
 
 		return {
 			definition: JSON.stringify(definition),
 			layout: JSON.stringify(layout),
 		};
+	}
+
+	_fromDataDefinitionToDDMFormPropertyName(propertyName) {
+		const map = {
+			defaultValue: 'predefinedValue',
+			fieldType: 'type',
+			name: 'fieldName',
+			nestedDataDefinitionFields: 'nestedFields',
+		};
+
+		return map[propertyName] || propertyName;
+	}
+
+	_fromDDMFormToDataDefinitionPropertyName(propertyName) {
+		const map = {
+			fieldName: 'name',
+			nestedFields: 'nestedDataDefinitionFields',
+			predefinedValue: 'defaultValue',
+			type: 'fieldType',
+		};
+
+		return map[propertyName] || propertyName;
+	}
+
+	_getDataDefinitionfieldPropertyValue(dataDefinitionField, propertyName) {
+		const {customProperties} = dataDefinitionField;
+
+		if (customProperties && this._isCustomProperty(propertyName)) {
+			return customProperties[propertyName];
+		}
+
+		return dataDefinitionField[propertyName];
 	}
 
 	_isCustomProperty(name) {
@@ -370,26 +478,6 @@ class DataLayoutBuilder extends React.Component {
 		];
 
 		return fields.indexOf(name) === -1;
-	}
-
-	_getDataDefinitionFieldPropertyName(propertyName) {
-		const map = {
-			fieldName: 'name',
-			predefinedValue: 'defaultValue',
-			type: 'fieldType',
-		};
-
-		return map[propertyName] || propertyName;
-	}
-
-	_getDataDefinitionFieldPropertyValue(dataDefinitionField, propertyName) {
-		const {customProperties} = dataDefinitionField;
-
-		if (customProperties && this._isCustomProperty(propertyName)) {
-			return customProperties[propertyName];
-		}
-
-		return dataDefinitionField[propertyName];
 	}
 
 	_onLocaleChange(event) {
