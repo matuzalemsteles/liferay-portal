@@ -133,6 +133,8 @@ public class DataRecordValuesUtil {
 
 		ddmFormFieldValue.setName(name);
 
+		ddmFormFieldValue.setValue(ddmFormField.getPredefinedValue());
+
 		if ((dataRecordValues == null) || !dataRecordValues.containsKey(name)) {
 			return ListUtil.fromArray(ddmFormFieldValue);
 		}
