@@ -69,7 +69,7 @@ function APIService({endpoints, namespace, page}) {
 						analyticsReportsTrafficSources: [
 							{
 								helpMessage: Liferay.Language.get(
-									'organic-help-message'
+									'this-number-refers-to-the-volume-of-people-that-find-your-page-through-a-search-engine'
 								),
 								name: 'organic',
 								title: Liferay.Language.get('organic'),
@@ -77,7 +77,7 @@ function APIService({endpoints, namespace, page}) {
 							},
 							{
 								helpMessage: Liferay.Language.get(
-									'paid-help-message'
+									'this-number-refers-to-the-volume-of-people-that-find-your-page-through-paid-keywords'
 								),
 								name: 'paid',
 								title: Liferay.Language.get('paid'),
