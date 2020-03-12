@@ -17,6 +17,7 @@ import filterConstants from '../../shared/components/filter/util/filterConstants
 import QuickActionKebab from '../../shared/components/quick-action-kebab/QuickActionKebab.es';
 import ResultsBar from '../../shared/components/results-bar/ResultsBar.es';
 import ToolbarWithSelection from '../../shared/components/toolbar-with-selection/ToolbarWithSelection.es';
+import {AppContext} from '../AppContext.es';
 import AssigneeFilter from '../filter/AssigneeFilter.es';
 import ProcessStatusFilter, {
 	processStatusConstants,
@@ -34,6 +35,7 @@ const Header = ({
 	selectedFilters,
 	totalCount,
 }) => {
+	const {userId} = useContext(AppContext);
 	const {
 		selectAll,
 		selectedItems,
@@ -42,6 +44,8 @@ const Header = ({
 	} = useContext(InstanceListContext);
 	const previousCount = usePrevious(totalCount);
 	const {bulkModal, setBulkModal, setSingleModal} = useContext(ModalContext);
+
+	const compareId = itemId => ({id}) => id === itemId;
 
 	const kebabItems = [
 		{
@@ -65,8 +69,7 @@ const Header = ({
 	];
 
 	const selectedOnPage = useMemo(
-		() =>
-			selectedItems.filter(item => items.find(({id}) => id === item.id)),
+		() => selectedItems.filter(({id}) => items.find(compareId(id))),
 		[items, selectedItems]
 	);
 
@@ -79,13 +82,21 @@ const Header = ({
 			selectedOnPage.length > 0 && !allPageSelected && !selectAll,
 	};
 
+	const isRemainingItem = useCallback(
+		clear => ({assigneeUsers = [], id, status}) => {
+			const assignedToUser = !!assigneeUsers.find(({id}) => id == userId);
+			const completed = status === processStatusConstants.completed;
+			const selected = clear && selectedItems.find(compareId(id));
+			const unassigned = assigneeUsers.length === 0;
+
+			return (unassigned || assignedToUser) && !completed && !selected;
+		},
+		[selectedItems, userId]
+	);
+
 	const remainingItems = useMemo(() => {
-		return items.filter(
-			item =>
-				!selectedItems.find(({id}) => item.id === id) &&
-				item.status !== processStatusConstants.completed
-		);
-	}, [items, selectedItems]);
+		return items.filter(isRemainingItem(true));
+	}, [items, isRemainingItem]);
 
 	const toolbarActive = useMemo(() => selectedItems.length > 0, [
 		selectedItems,
@@ -97,11 +108,7 @@ const Header = ({
 			remainingItems.length > 0 &&
 			previousCount === totalCount
 		) {
-			setSelectedItems(
-				items.filter(
-					item => item.status !== processStatusConstants.completed
-				)
-			);
+			setSelectedItems(items.filter(isRemainingItem()));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [items]);
@@ -120,9 +127,7 @@ const Header = ({
 		checked => () => {
 			const updatedItems = checked
 				? [...selectedItems, ...remainingItems]
-				: selectedItems.filter(
-						item => !items.find(({id}) => item.id === id)
-				  );
+				: selectedItems.filter(({id}) => !items.find(compareId(id)));
 
 			setSelectAll(totalCount > 0 && totalCount === updatedItems.length);
 			setSelectedItems(updatedItems);

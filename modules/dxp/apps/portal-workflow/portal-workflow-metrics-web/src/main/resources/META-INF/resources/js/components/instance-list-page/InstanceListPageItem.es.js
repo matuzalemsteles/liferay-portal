@@ -17,6 +17,8 @@ import React, {useCallback, useContext, useEffect, useState} from 'react';
 import QuickActionKebab from '../../shared/components/quick-action-kebab/QuickActionKebab.es';
 import moment from '../../shared/util/moment.es';
 import {capitalize} from '../../shared/util/util.es';
+import {AppContext} from '../AppContext.es';
+import {processStatusConstants} from '../filter/ProcessStatusFilter.es';
 import {ModalContext} from './modal/ModalContext.es';
 import {InstanceListContext} from './store/InstanceListPageStore.es';
 
@@ -43,6 +45,7 @@ const getSLAStatusIcon = slaStatus => {
 };
 
 const Item = ({totalCount, ...instance}) => {
+	const {userId} = useContext(AppContext);
 	const {
 		selectedItems = [],
 		setInstanceId,
@@ -72,15 +75,19 @@ const Item = ({totalCount, ...instance}) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedItems]);
 
-	const completed = status === 'Completed';
+	const assignedToUser = !!assigneeUsers.find(({id}) => id == userId);
+	const completed = status === processStatusConstants.completed;
+	const unassigned = assigneeUsers.length === 0;
+
+	const disableCheckbox = (!assignedToUser && !unassigned) || completed;
 	const slaStatusIcon = getSLAStatusIcon(slaStatus);
 
-	const assigneeUserNames = assigneeUsers
-		.map(assigneeUser => assigneeUser.name)
-		.join(', ');
+	const assigneeUserNames = unassigned
+		? Liferay.Language.get('unassigned')
+		: assigneeUsers.map(user => user.name).join(', ');
 
 	const formattedAssignees = !completed
-		? assigneeUserNames || Liferay.Language.get('unassigned')
+		? assigneeUserNames
 		: Liferay.Language.get('not-available');
 
 	const formattedTaskNames = !completed
@@ -110,7 +117,7 @@ const Item = ({totalCount, ...instance}) => {
 					<ClayCheckbox
 						checked={checked}
 						data-testid="instanceCheckbox"
-						disabled={completed}
+						disabled={disableCheckbox}
 						onChange={handleCheck}
 					/>
 
@@ -169,7 +176,10 @@ const Item = ({totalCount, ...instance}) => {
 			</ClayTable.Cell>
 
 			<ClayTable.Cell style={{paddingRight: '0rem'}}>
-				<QuickActionMenu disabled={completed} instance={instance} />
+				<QuickActionMenu
+					disabled={disableCheckbox}
+					instance={instance}
+				/>
 			</ClayTable.Cell>
 		</ClayTable.Row>
 	);
