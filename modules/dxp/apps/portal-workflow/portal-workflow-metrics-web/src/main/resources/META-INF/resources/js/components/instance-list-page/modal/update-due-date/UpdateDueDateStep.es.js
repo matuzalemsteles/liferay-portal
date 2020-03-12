@@ -172,7 +172,7 @@ const TimePickerInputWithOptions = ({format, isAmPm, setValue, value}) => {
 				onBlur={() => setShowOptions(false)}
 				onChange={({target}) => setValue(target.value)}
 				onFocus={() => setShowOptions(true)}
-				placeholder={isAmPm ? 'HH:mm am' : 'HH:mm'}
+				placeholder={isAmPm ? 'HH:mm am/pm' : 'HH:mm'}
 				ref={inputRef}
 				value={value}
 			/>
