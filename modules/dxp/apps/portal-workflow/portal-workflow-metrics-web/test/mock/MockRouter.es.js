@@ -42,6 +42,7 @@ const MockRouter = ({
 	isAmPm,
 	path = '/:page/:pageSize/:sort',
 	query = '?backPath=%2F',
+	userId = '1',
 	withoutRouterProps,
 }) => {
 	const [title, setTitle] = useState(null);
@@ -60,6 +61,7 @@ const MockRouter = ({
 			setTitle,
 			status,
 			title,
+			userId,
 		}),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[]
