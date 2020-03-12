@@ -19,8 +19,8 @@ import {withRouter} from 'react-router-dom';
 
 import {AppContext} from '../../AppContext.es';
 import Button from '../../components/button/Button.es';
-import {ToastContext} from '../../components/toast/ToastContext.es';
 import {addItem, updateItem} from '../../utils/client.es';
+import {errorToast, successToast} from '../../utils/toast.es';
 import EditAppContext from './EditAppContext.es';
 
 export default withRouter(
@@ -37,7 +37,6 @@ export default withRouter(
 		} = useContext(EditAppContext);
 
 		const {getStandaloneURL} = useContext(AppContext);
-		const {addToast} = useContext(ToastContext);
 
 		const [isDeploying, setDeploying] = useState(false);
 
@@ -68,36 +67,19 @@ export default withRouter(
 		};
 
 		const onSuccess = appId => {
-			addToast({
-				displayType: 'success',
-				message: (
-					<>
-						{Liferay.Language.get(
-							'the-app-was-deployed-successfully'
-						)}{' '}
-						{getStandaloneLink(appId)}
-					</>
-				),
-				title: `${Liferay.Language.get('success')}:`,
-			});
+			successToast(
+				<>
+					{Liferay.Language.get('the-app-was-deployed-successfully')}{' '}
+					{getStandaloneLink(appId)}
+				</>
+			);
 
 			setDeploying(false);
 		};
 
 		const onError = error => {
-			const {title: message = ''} = error;
-
-			addToast({
-				displayType: 'danger',
-				message: (
-					<>
-						{message}
-						{'.'}
-					</>
-				),
-				title: `${Liferay.Language.get('error')}:`,
-			});
-
+			const {title = ''} = error;
+			errorToast(`${title}.`);
 			setDeploying(false);
 		};
 

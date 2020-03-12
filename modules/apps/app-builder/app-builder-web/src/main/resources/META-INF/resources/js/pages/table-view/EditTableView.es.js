@@ -19,12 +19,9 @@ import {withRouter} from 'react-router-dom';
 import ControlMenu from '../../components/control-menu/ControlMenu.es';
 import DragLayer from '../../components/drag-and-drop/DragLayer.es';
 import {Loading} from '../../components/loading/Loading.es';
-import {
-	ToastContext,
-	ToastContextProvider,
-} from '../../components/toast/ToastContext.es';
 import UpperToolbar from '../../components/upper-toolbar/UpperToolbar.es';
 import {addItem, updateItem} from '../../utils/client.es';
+import {errorToast, successToast} from '../../utils/toast.es';
 import DropZone from './DropZone.es';
 import EditTableViewContext, {
 	ADD_DATA_LIST_VIEW_FIELD,
@@ -39,8 +36,6 @@ const EditTableView = withRouter(({history}) => {
 		EditTableViewContext
 	);
 
-	const {addToast} = useContext(ToastContext);
-
 	let title = Liferay.Language.get('new-table-view');
 
 	if (dataListView.id) {
@@ -48,18 +43,13 @@ const EditTableView = withRouter(({history}) => {
 	}
 
 	const onError = error => {
-		const {title: message = ''} = error;
+		const {title = ''} = error;
+		errorToast(`${title}.`);
+	};
 
-		addToast({
-			displayType: 'danger',
-			message: (
-				<>
-					{message}
-					{'.'}
-				</>
-			),
-			title: `${Liferay.Language.get('error')}:`,
-		});
+	const onSuccess = () => {
+		successToast(Liferay.Language.get('table-view-saved'));
+		history.goBack();
 	};
 
 	const onInput = event => {
@@ -95,7 +85,7 @@ const EditTableView = withRouter(({history}) => {
 				`/o/data-engine/v2.0/data-list-views/${dataListView.id}`,
 				dataListView
 			)
-				.then(() => history.goBack())
+				.then(onSuccess)
 				.catch(error => {
 					onError(error);
 				});
@@ -105,7 +95,7 @@ const EditTableView = withRouter(({history}) => {
 				`/o/data-engine/v2.0/data-definitions/${dataDefinition.id}/data-list-views`,
 				dataListView
 			)
-				.then(() => history.goBack())
+				.then(onSuccess)
 				.catch(error => {
 					onError(error);
 				});
@@ -207,9 +197,7 @@ const EditTableView = withRouter(({history}) => {
 export default props => {
 	return (
 		<EditTableViewContextProvider>
-			<ToastContextProvider>
-				<EditTableView {...props} />
-			</ToastContextProvider>
+			<EditTableView {...props} />
 		</EditTableViewContextProvider>
 	);
 };

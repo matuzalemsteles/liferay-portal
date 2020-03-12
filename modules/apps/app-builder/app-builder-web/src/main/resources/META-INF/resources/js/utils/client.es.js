@@ -14,6 +14,8 @@
 
 import {fetch} from 'frontend-js-web';
 
+import {errorToast, successToast} from '../utils/toast.es';
+
 const HEADERS = {
 	Accept: 'application/json',
 	'Accept-Language': Liferay.ThemeDisplay.getBCP47LanguageId(),
@@ -52,7 +54,15 @@ export const confirmDelete = endpoint => item =>
 		if (confirmed) {
 			deleteItem(endpoint + item.id)
 				.then(() => resolve(true))
-				.catch(error => reject(error));
+				.then(() =>
+					successToast(
+						Liferay.Language.get(
+							'the-item-was-deleted-successfully'
+						)
+					)
+				)
+				.catch(error => reject(error))
+				.catch(errorToast);
 		}
 		else {
 			resolve(false);

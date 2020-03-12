@@ -13,7 +13,6 @@
  */
 
 import {DataDefinitionUtils} from 'data-engine-taglib';
-import openToast from 'frontend-js-web/liferay/toast/commands/OpenToast.es';
 import React, {useContext, useEffect, useState} from 'react';
 import {Link, withRouter} from 'react-router-dom';
 
@@ -23,6 +22,7 @@ import ListView from '../../components/list-view/ListView.es';
 import {Loading} from '../../components/loading/Loading.es';
 import {toQuery, toQueryString} from '../../hooks/useQuery.es';
 import {confirmDelete, getItem} from '../../utils/client.es';
+import {successToast} from '../../utils/toast.es';
 import {FieldValuePreview} from './FieldPreview.es';
 import {ACTIONS, PermissionsContext} from './PermissionsContext.es';
 
@@ -103,13 +103,9 @@ const ListEntries = withRouter(({history, location}) => {
 						item
 					).then(confirmed => {
 						if (confirmed) {
-							openToast({
-								message: Liferay.Language.get(
-									'an-entry-was-deleted'
-								),
-								title: Liferay.Language.get('success'),
-								type: 'success',
-							});
+							successToast(
+								Liferay.Language.get('an-entry-was-deleted')
+							);
 						}
 
 						return Promise.resolve(confirmed);

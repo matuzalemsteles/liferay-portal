@@ -12,20 +12,26 @@
  * details.
  */
 
-import {ClayModalProvider} from '@clayui/modal';
-import React from 'react';
+import {openToast} from 'frontend-js-web';
 
-import {AppContextProvider} from '../../AppContext.es';
-import EditFormView from './EditFormView.es';
-
-const EditFormViewApp = ({basePortletURL, ...props}) => {
-	return (
-		<AppContextProvider basePortletURL={basePortletURL}>
-			<ClayModalProvider>
-				<EditFormView {...props} />
-			</ClayModalProvider>
-		</AppContextProvider>
-	);
+export const errorToast = (
+	message = Liferay.Language.get('an-unexpected-error-occurred'),
+	title = Liferay.Language.get('error')
+) => {
+	openToast({
+		message,
+		title: `${title}:`,
+		type: 'danger',
+	});
 };
 
-export default EditFormViewApp;
+export const successToast = (
+	message = Liferay.Language.get('your-request-completed-successfully'),
+	title = Liferay.Language.get('success')
+) => {
+	openToast({
+		message,
+		title: `${title}:`,
+		type: 'success',
+	});
+};

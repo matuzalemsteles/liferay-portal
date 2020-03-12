@@ -16,8 +16,8 @@ import {DataLayoutBuilderActions} from 'data-engine-taglib';
 import React, {useContext} from 'react';
 
 import {AppContext} from '../../AppContext.es';
-import {ToastContext} from '../../components/toast/ToastContext.es';
 import UpperToolbar from '../../components/upper-toolbar/UpperToolbar.es';
+import {errorToast, successToast} from '../../utils/toast.es';
 import FormViewContext from './FormViewContext.es';
 import saveFormView from './saveFormView.es';
 
@@ -27,8 +27,6 @@ export default ({newCustomObject}) => {
 
 	const {basePortletURL} = useContext(AppContext);
 	const listUrl = `${basePortletURL}/#/custom-object/${dataDefinitionId}/form-views`;
-
-	const {addToast} = useContext(ToastContext);
 
 	const onCancel = () => {
 		if (newCustomObject) {
@@ -40,18 +38,13 @@ export default ({newCustomObject}) => {
 	};
 
 	const onError = error => {
-		const {title: message = ''} = error;
+		const {title = ''} = error;
+		errorToast(`${title}.`);
+	};
 
-		addToast({
-			displayType: 'danger',
-			message: (
-				<>
-					{message}
-					{'.'}
-				</>
-			),
-			title: `${Liferay.Language.get('error')}:`,
-		});
+	const onSuccess = () => {
+		successToast(Liferay.Language.get('form-view-saved'));
+		Liferay.Util.navigate(listUrl);
 	};
 
 	const onInput = ({target}) => {
@@ -73,9 +66,7 @@ export default ({newCustomObject}) => {
 
 	const onSave = () => {
 		saveFormView(state)
-			.then(() => {
-				Liferay.Util.navigate(listUrl);
-			})
+			.then(onSuccess)
 			.catch(error => {
 				onError(error);
 			});
