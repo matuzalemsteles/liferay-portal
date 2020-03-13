@@ -99,11 +99,12 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 
 		Set<Locale> availableLocales = ddmFormLayout.getAvailableLocales();
 
+		List<DDMFormLayoutPage> ddmFormLayoutPages =
+			ddmFormLayout.getDDMFormLayoutPages();
+
 		ddmFormLayout.setPaginationMode(DDMFormLayout.SINGLE_PAGE_MODE);
 
-		for (DDMFormLayoutPage ddmFormLayoutPage :
-				ddmFormLayout.getDDMFormLayoutPages()) {
-
+		for (DDMFormLayoutPage ddmFormLayoutPage : ddmFormLayoutPages) {
 			LocalizedValue localizedValue = ddmFormLayoutPage.getTitle();
 
 			if (localizedValue == null) {
