@@ -61,8 +61,12 @@ export const confirmDelete = endpoint => item =>
 						)
 					)
 				)
-				.catch(error => reject(error))
-				.catch(errorToast);
+				.catch(error => {
+					errorToast(
+						Liferay.Language.get('the-item-could-not-be-deleted')
+					);
+					reject(error);
+				});
 		}
 		else {
 			resolve(false);
