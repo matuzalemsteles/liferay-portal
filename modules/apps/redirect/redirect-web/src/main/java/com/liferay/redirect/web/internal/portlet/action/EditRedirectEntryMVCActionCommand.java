@@ -91,15 +91,15 @@ public class EditRedirectEntryMVCActionCommand extends BaseMVCActionCommand {
 	private Date _getExpirationDate(
 		ActionRequest actionRequest, ThemeDisplay themeDisplay) {
 
-		String expirationDate = ParamUtil.getString(
+		String expirationDateString = ParamUtil.getString(
 			actionRequest, "expirationDate");
 
-		if (Validator.isNull(expirationDate)) {
+		if (Validator.isNull(expirationDateString)) {
 			return null;
 		}
 
 		return GetterUtil.getDate(
-			expirationDate,
+			expirationDateString,
 			DateFormatFactoryUtil.getSimpleDateFormat(
 				"yyyy-MM-dd", themeDisplay.getLocale()),
 			null);
