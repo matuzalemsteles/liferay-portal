@@ -48,7 +48,9 @@ const EditTableView = withRouter(({history}) => {
 	};
 
 	const onSuccess = () => {
-		successToast(Liferay.Language.get('table-view-saved'));
+		successToast(
+			Liferay.Language.get('the-table-view-was-saved-successfully')
+		);
 		history.goBack();
 	};
 
