@@ -6453,13 +6453,13 @@ public class PortalImpl implements Portal {
 		while ((count > 0) && resourceId.contains("%")) {
 			resourceId = HttpUtil.decodePath(resourceId);
 
-			matcher = _bannedResourceIdPattern.matcher(resourceId);
-
-			if (matcher.matches()) {
+			if (Validator.isNull(resourceId)) {
 				return false;
 			}
 
-			if (Validator.isNull(resourceId)) {
+			matcher = _bannedResourceIdPattern.matcher(resourceId);
+
+			if (matcher.matches()) {
 				return false;
 			}
 
