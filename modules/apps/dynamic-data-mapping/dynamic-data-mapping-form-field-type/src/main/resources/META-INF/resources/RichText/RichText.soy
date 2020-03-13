@@ -10,6 +10,7 @@
 	{@param? localizedValue: ?}
 	{@param? predefinedValue: string}
 	{@param? readOnly: bool}
+	{@param? ref: string}
 	{@param? repeatable: bool}
 	{@param? required: bool}
 	{@param? showLabel: bool}
@@ -23,7 +24,7 @@
 		{param contentRenderer kind="html"}
 			{call RichTextAdapter.render}
 				{param events: ['dispatch': $_handleOnDispatch] /}
-				{param ref: $name /}
+				{param ref: $ref /}
 				{param store: [
 					'data': $value ?: $predefinedValue,
 					'name': $name,

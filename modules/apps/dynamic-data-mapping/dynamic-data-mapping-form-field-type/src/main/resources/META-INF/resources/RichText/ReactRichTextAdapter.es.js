@@ -87,9 +87,34 @@ const RichText = ({data, dispatch, name, readOnly}) => {
 		};
 	}
 
+	const style = {
+		border: '1px solid #E7E7ED',
+		height: '148px',
+	};
+
 	return (
 		<>
-			<Editor {...editorProps} />
+			{readOnly && data && (
+				<div
+					dangerouslySetInnerHTML={{
+						__html: data,
+					}}
+					name={`html_text_${name}`}
+					style={style}
+				></div>
+			)}
+
+			{readOnly && !data && (
+				<div
+					name={`html_text_${name}`}
+					style={{...style, color: '#A7A9BC', padding: '16px'}}
+				>
+					{Liferay.Language.get('click-to-add-a-rich-text')}
+				</div>
+			)}
+
+			{!readOnly && <Editor {...editorProps} />}
+
 			<ClayInput name={name} type="hidden" value={data} />
 		</>
 	);
