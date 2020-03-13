@@ -14,6 +14,7 @@
 
 package com.liferay.data.engine.taglib.servlet.taglib.definition;
 
+import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 
 import java.util.Map;
@@ -35,6 +36,10 @@ public interface DataLayoutBuilderDefinition {
 		return new String[0];
 	}
 
+	public default String getPaginationMode() {
+		return DDMFormLayout.WIZARD_MODE;
+	}
+
 	public default Map<String, Object> getSuccessPageSettings() {
 		return HashMapBuilder.<String, Object>put(
 			"enabled", true
@@ -48,6 +53,10 @@ public interface DataLayoutBuilderDefinition {
 		};
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public default boolean isMultiPage() {
 		return true;
 	}
