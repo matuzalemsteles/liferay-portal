@@ -77,7 +77,7 @@ public class DataRecordValuesUtilTest extends PowerMockito {
 
 		Value value = ddmFormFieldValue.getValue();
 
-		Assert.assertNull(value);
+		Assert.assertEquals(ddmFormField.getPredefinedValue(), value);
 	}
 
 	@Test
