@@ -61,7 +61,8 @@ export default withRouter(
 
 			return (
 				<ClayLink href={url} target="_blank">
-					{`${Liferay.Language.get('open-standalone-app')}.`} <ClayIcon symbol="shortcut" />
+					{`${Liferay.Language.get('open-standalone-app')}.`}{' '}
+					<ClayIcon symbol="shortcut" />
 				</ClayLink>
 			);
 		};
