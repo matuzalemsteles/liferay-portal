@@ -2124,22 +2124,6 @@
 				</licenses>
 			</library>
 			<library>
-				<file-name>lib/portal/jhlabs-filters.jar</file-name>
-				<version>01012005</version>
-				<project-name>JH Labs Java Image Filters</project-name>
-				<project-url>http://www.jhlabs.com/ip/filters</project-url>
-				<licenses>
-					<license>
-						<license-name>Apache License 2.0</license-name>
-						<license-url>http://www.apache.org/licenses/LICENSE-2.0</license-url>
-					</license>
-				</licenses>
-				<comments>
-					This JAR was bundled with SimpleCaptcha and originally named
-					imaging.jar.
-				</comments>
-			</library>
-			<library>
 				<file-name>lib/portal/jmatio.jar</file-name>
 				<version>1.2</version>
 				<project-name>JMatIO</project-name>
@@ -2759,18 +2743,6 @@
 						<license-name>Apache License 2.0</license-name>
 						<license-url>http://www.apache.org/licenses/LICENSE-2.0</license-url>
 						<copyright-notice>Copyright (c) 2003, IBM Corporation., http://www.ibm.com</copyright-notice>
-					</license>
-				</licenses>
-			</library>
-			<library>
-				<file-name>lib/portal/simplecaptcha.jar</file-name>
-				<version>1.1.1</version>
-				<project-name>SimpleCaptcha</project-name>
-				<project-url>http://simplecaptcha.sourceforge.net</project-url>
-				<licenses>
-					<license>
-						<license-name>Apache License 2.0</license-name>
-						<license-url>http://www.apache.org/licenses/LICENSE-2.0</license-url>
 					</license>
 				</licenses>
 			</library>
