@@ -52,16 +52,15 @@ public class EditRedirectEntryMVCActionCommand extends BaseMVCActionCommand {
 	protected void doProcessAction(
 		ActionRequest actionRequest, ActionResponse actionResponse) {
 
-		long redirectEntryId = ParamUtil.getLong(
-			actionRequest, "redirectEntryId");
-
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		Date expirationDate = _getExpirationDate(actionRequest, themeDisplay);
+		long redirectEntryId = ParamUtil.getLong(
+			actionRequest, "redirectEntryId");
 
 		String destinationURL = ParamUtil.getString(
 			actionRequest, "destinationURL");
+		Date expirationDate = _getExpirationDate(actionRequest, themeDisplay);
 		String sourceURL = ParamUtil.getString(actionRequest, "sourceURL");
 		boolean temporary = ParamUtil.getBoolean(actionRequest, "temporary");
 
