@@ -32,8 +32,9 @@ describe('toast', () => {
 		jest.resetAllMocks();
 	});
 
-	it('execute success toast with default values', () => {
+	it('executes success toast with default values', () => {
 		successToast();
+
 		expect(openToast).toBeCalledWith({
 			message: Liferay.Language.get(
 				'your-request-completed-successfully'
@@ -43,11 +44,32 @@ describe('toast', () => {
 		});
 	});
 
-	it('execute error toast with default values', () => {
+	it('executes success toast with values', () => {
+		successToast('message', 'title');
+
+		expect(openToast).toBeCalledWith({
+			message: 'message',
+			title: 'title:',
+			type: 'success',
+		});
+	});
+
+	it('executes error toast with default values', () => {
 		errorToast();
+
 		expect(openToast).toBeCalledWith({
 			message: Liferay.Language.get('an-unexpected-error-occurred'),
 			title: `${Liferay.Language.get('error')}:`,
+			type: 'danger',
+		});
+	});
+
+	it('executes error toast with values', () => {
+		errorToast('message', 'title');
+
+		expect(openToast).toBeCalledWith({
+			message: 'message',
+			title: 'title:',
 			type: 'danger',
 		});
 	});
