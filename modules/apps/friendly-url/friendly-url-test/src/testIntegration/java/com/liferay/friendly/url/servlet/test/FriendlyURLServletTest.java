@@ -514,15 +514,14 @@ public class FriendlyURLServletTest {
 		dictionary.put("enabled", true);
 
 		try (ConfigurationTemporarySwapper configurationTemporarySwapper =
-				new ConfigurationTemporarySwapper(_PID, dictionary)) {
+				new ConfigurationTemporarySwapper(
+					"com.liferay.redirect.web.internal.configuration." +
+						"FFRedirectConfiguration",
+					dictionary)) {
 
 			unsafeRunnable.run();
 		}
 	}
-
-	private static final String _PID =
-		"com.liferay.redirect.web.internal.configuration." +
-			"FFRedirectConfiguration";
 
 	@Inject
 	private static LayoutLocalService _layoutLocalService;
