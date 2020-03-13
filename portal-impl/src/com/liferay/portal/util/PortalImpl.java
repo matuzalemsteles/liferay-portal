@@ -6459,7 +6459,7 @@ public class PortalImpl implements Portal {
 				return false;
 			}
 
-			if (resourceId.equals(StringPool.BLANK)) {
+			if (Validator.isNull(resourceId)) {
 				return false;
 			}
 
