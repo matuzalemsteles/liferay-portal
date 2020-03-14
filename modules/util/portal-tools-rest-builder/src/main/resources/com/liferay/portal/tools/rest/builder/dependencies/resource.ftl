@@ -39,6 +39,10 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface ${schemaName}Resource {
 
+	public static Builder builder() {
+		return FactoryHolder.factory.create();
+	}
+
 	<#list freeMarkerTool.getResourceJavaMethodSignatures(configYAML, openAPIYAML, schemaName) as javaMethodSignature>
 		public ${javaMethodSignature.returnType} ${javaMethodSignature.methodName}(${freeMarkerTool.getResourceParameters(javaMethodSignature.javaMethodParameters, openAPIYAML, javaMethodSignature.operation, false)}) throws Exception;
 	</#list>
@@ -60,5 +64,29 @@ public interface ${schemaName}Resource {
 	}
 
 	public void setContextUser(com.liferay.portal.kernel.model.User contextUser);
+
+	public static class FactoryHolder {
+
+		public static volatile Factory factory;
+
+	}
+
+	@ProviderType
+	public interface Builder {
+
+		public ${schemaName}Resource build();
+
+		public Builder checkPermissions(boolean checkPermissions);
+
+		public Builder user(com.liferay.portal.kernel.model.User user);
+
+	}
+
+	@ProviderType
+	public interface Factory {
+
+		public Builder create();
+
+	}
 
 }

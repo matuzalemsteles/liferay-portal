@@ -249,6 +249,8 @@ public class RESTBuilder {
 				_createPropertiesFile(
 					context, escapedVersion,
 					String.valueOf(context.get("schemaPath")));
+				_createResourceFactoryImplFile(
+					context, escapedVersion, schemaName);
 				_createResourceFile(context, escapedVersion, schemaName);
 				_createResourceImplFile(context, escapedVersion, schemaName);
 
@@ -818,6 +820,33 @@ public class RESTBuilder {
 
 		FileUtil.write(
 			file, FreeMarkerUtil.processTemplate(null, "properties", context));
+	}
+
+	private void _createResourceFactoryImplFile(
+			Map<String, Object> context, String escapedVersion,
+			String schemaName)
+		throws Exception {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(_configYAML.getImplDir());
+		sb.append("/");
+		sb.append(
+			StringUtil.replace(_configYAML.getApiPackagePath(), '.', '/'));
+		sb.append("/internal/resource/");
+		sb.append(escapedVersion);
+		sb.append("/factory/");
+		sb.append(schemaName);
+		sb.append("ResourceFactoryImpl.java");
+
+		File file = new File(sb.toString());
+
+		_files.add(file);
+
+		FileUtil.write(
+			file,
+			FreeMarkerUtil.processTemplate(
+				_copyrightFile, "resource_factory_impl", context));
 	}
 
 	private void _createResourceFile(
