@@ -43,6 +43,10 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface FormResource {
 
+	public static Builder builder() {
+		return FactoryHolder.factory.create();
+	}
+
 	public Form getForm(Long formId) throws Exception;
 
 	public FormContext postFormEvaluateContext(
@@ -76,5 +80,29 @@ public interface FormResource {
 
 	public void setContextUser(
 		com.liferay.portal.kernel.model.User contextUser);
+
+	public static class FactoryHolder {
+
+		public static volatile Factory factory;
+
+	}
+
+	@ProviderType
+	public interface Builder {
+
+		public FormResource build();
+
+		public Builder checkPermissions(boolean checkPermissions);
+
+		public Builder user(com.liferay.portal.kernel.model.User user);
+
+	}
+
+	@ProviderType
+	public interface Factory {
+
+		public Builder create();
+
+	}
 
 }

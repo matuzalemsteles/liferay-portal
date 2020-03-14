@@ -43,6 +43,10 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface DocumentFolderResource {
 
+	public static Builder builder() {
+		return FactoryHolder.factory.create();
+	}
+
 	public void deleteDocumentFolder(Long documentFolderId) throws Exception;
 
 	public Response deleteDocumentFolderBatch(String callbackURL, Object object)
@@ -110,5 +114,29 @@ public interface DocumentFolderResource {
 
 	public void setContextUser(
 		com.liferay.portal.kernel.model.User contextUser);
+
+	public static class FactoryHolder {
+
+		public static volatile Factory factory;
+
+	}
+
+	@ProviderType
+	public interface Builder {
+
+		public DocumentFolderResource build();
+
+		public Builder checkPermissions(boolean checkPermissions);
+
+		public Builder user(com.liferay.portal.kernel.model.User user);
+
+	}
+
+	@ProviderType
+	public interface Factory {
+
+		public Builder create();
+
+	}
 
 }

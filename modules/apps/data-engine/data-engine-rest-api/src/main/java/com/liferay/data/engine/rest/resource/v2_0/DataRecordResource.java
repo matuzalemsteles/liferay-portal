@@ -42,6 +42,10 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface DataRecordResource {
 
+	public static Builder builder() {
+		return FactoryHolder.factory.create();
+	}
+
 	public Page<DataRecord> getDataDefinitionDataRecordsPage(
 			Long dataDefinitionId, Long dataListViewId, String keywords,
 			Pagination pagination, Sort[] sorts)
@@ -105,5 +109,29 @@ public interface DataRecordResource {
 
 	public void setContextUser(
 		com.liferay.portal.kernel.model.User contextUser);
+
+	public static class FactoryHolder {
+
+		public static volatile Factory factory;
+
+	}
+
+	@ProviderType
+	public interface Builder {
+
+		public DataRecordResource build();
+
+		public Builder checkPermissions(boolean checkPermissions);
+
+		public Builder user(com.liferay.portal.kernel.model.User user);
+
+	}
+
+	@ProviderType
+	public interface Factory {
+
+		public Builder create();
+
+	}
 
 }

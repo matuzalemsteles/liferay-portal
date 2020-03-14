@@ -46,6 +46,10 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface MessageBoardThreadResource {
 
+	public static Builder builder() {
+		return FactoryHolder.factory.create();
+	}
+
 	public Page<MessageBoardThread>
 			getMessageBoardSectionMessageBoardThreadsPage(
 				Long messageBoardSectionId, String search, Filter filter,
@@ -144,5 +148,29 @@ public interface MessageBoardThreadResource {
 
 	public void setContextUser(
 		com.liferay.portal.kernel.model.User contextUser);
+
+	public static class FactoryHolder {
+
+		public static volatile Factory factory;
+
+	}
+
+	@ProviderType
+	public interface Builder {
+
+		public MessageBoardThreadResource build();
+
+		public Builder checkPermissions(boolean checkPermissions);
+
+		public Builder user(com.liferay.portal.kernel.model.User user);
+
+	}
+
+	@ProviderType
+	public interface Factory {
+
+		public Builder create();
+
+	}
 
 }

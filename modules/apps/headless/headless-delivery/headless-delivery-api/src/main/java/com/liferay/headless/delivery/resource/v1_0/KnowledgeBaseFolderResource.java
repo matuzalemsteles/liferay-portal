@@ -41,6 +41,10 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface KnowledgeBaseFolderResource {
 
+	public static Builder builder() {
+		return FactoryHolder.factory.create();
+	}
+
 	public void deleteKnowledgeBaseFolder(Long knowledgeBaseFolderId)
 		throws Exception;
 
@@ -106,5 +110,29 @@ public interface KnowledgeBaseFolderResource {
 
 	public void setContextUser(
 		com.liferay.portal.kernel.model.User contextUser);
+
+	public static class FactoryHolder {
+
+		public static volatile Factory factory;
+
+	}
+
+	@ProviderType
+	public interface Builder {
+
+		public KnowledgeBaseFolderResource build();
+
+		public Builder checkPermissions(boolean checkPermissions);
+
+		public Builder user(com.liferay.portal.kernel.model.User user);
+
+	}
+
+	@ProviderType
+	public interface Factory {
+
+		public Builder create();
+
+	}
 
 }

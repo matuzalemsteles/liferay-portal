@@ -40,6 +40,10 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface AssigneeResource {
 
+	public static Builder builder() {
+		return FactoryHolder.factory.create();
+	}
+
 	public Page<Assignee> getWorkflowTaskAssignableUsersPage(
 			Long workflowTaskId, Pagination pagination)
 		throws Exception;
@@ -64,5 +68,29 @@ public interface AssigneeResource {
 
 	public void setContextUser(
 		com.liferay.portal.kernel.model.User contextUser);
+
+	public static class FactoryHolder {
+
+		public static volatile Factory factory;
+
+	}
+
+	@ProviderType
+	public interface Builder {
+
+		public AssigneeResource build();
+
+		public Builder checkPermissions(boolean checkPermissions);
+
+		public Builder user(com.liferay.portal.kernel.model.User user);
+
+	}
+
+	@ProviderType
+	public interface Factory {
+
+		public Builder create();
+
+	}
 
 }

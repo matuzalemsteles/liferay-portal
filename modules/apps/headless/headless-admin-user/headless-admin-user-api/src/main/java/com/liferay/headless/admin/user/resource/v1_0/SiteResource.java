@@ -40,6 +40,10 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface SiteResource {
 
+	public static Builder builder() {
+		return FactoryHolder.factory.create();
+	}
+
 	public Page<Site> getMyUserAccountSitesPage(Pagination pagination)
 		throws Exception;
 
@@ -68,5 +72,29 @@ public interface SiteResource {
 
 	public void setContextUser(
 		com.liferay.portal.kernel.model.User contextUser);
+
+	public static class FactoryHolder {
+
+		public static volatile Factory factory;
+
+	}
+
+	@ProviderType
+	public interface Builder {
+
+		public SiteResource build();
+
+		public Builder checkPermissions(boolean checkPermissions);
+
+		public Builder user(com.liferay.portal.kernel.model.User user);
+
+	}
+
+	@ProviderType
+	public interface Factory {
+
+		public Builder create();
+
+	}
 
 }

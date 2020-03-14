@@ -46,6 +46,10 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface WorkflowTaskResource {
 
+	public static Builder builder() {
+		return FactoryHolder.factory.create();
+	}
+
 	public Page<WorkflowTask> getWorkflowInstanceWorkflowTasksPage(
 			Long workflowInstanceId, Boolean completed, Pagination pagination)
 		throws Exception;
@@ -148,5 +152,29 @@ public interface WorkflowTaskResource {
 
 	public void setContextUser(
 		com.liferay.portal.kernel.model.User contextUser);
+
+	public static class FactoryHolder {
+
+		public static volatile Factory factory;
+
+	}
+
+	@ProviderType
+	public interface Builder {
+
+		public WorkflowTaskResource build();
+
+		public Builder checkPermissions(boolean checkPermissions);
+
+		public Builder user(com.liferay.portal.kernel.model.User user);
+
+	}
+
+	@ProviderType
+	public interface Factory {
+
+		public Builder create();
+
+	}
 
 }

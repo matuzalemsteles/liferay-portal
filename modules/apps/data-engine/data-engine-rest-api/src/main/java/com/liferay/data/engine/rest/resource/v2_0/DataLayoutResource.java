@@ -42,6 +42,10 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface DataLayoutResource {
 
+	public static Builder builder() {
+		return FactoryHolder.factory.create();
+	}
+
 	public Page<DataLayout> getDataDefinitionDataLayoutsPage(
 			Long dataDefinitionId, String keywords, Pagination pagination,
 			Sort[] sorts)
@@ -92,5 +96,29 @@ public interface DataLayoutResource {
 
 	public void setContextUser(
 		com.liferay.portal.kernel.model.User contextUser);
+
+	public static class FactoryHolder {
+
+		public static volatile Factory factory;
+
+	}
+
+	@ProviderType
+	public interface Builder {
+
+		public DataLayoutResource build();
+
+		public Builder checkPermissions(boolean checkPermissions);
+
+		public Builder user(com.liferay.portal.kernel.model.User user);
+
+	}
+
+	@ProviderType
+	public interface Factory {
+
+		public Builder create();
+
+	}
 
 }

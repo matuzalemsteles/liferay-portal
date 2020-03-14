@@ -44,6 +44,10 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface BlogPostingResource {
 
+	public static Builder builder() {
+		return FactoryHolder.factory.create();
+	}
+
 	public void deleteBlogPosting(Long blogPostingId) throws Exception;
 
 	public Response deleteBlogPostingBatch(String callbackURL, Object object)
@@ -108,5 +112,29 @@ public interface BlogPostingResource {
 
 	public void setContextUser(
 		com.liferay.portal.kernel.model.User contextUser);
+
+	public static class FactoryHolder {
+
+		public static volatile Factory factory;
+
+	}
+
+	@ProviderType
+	public interface Builder {
+
+		public BlogPostingResource build();
+
+		public Builder checkPermissions(boolean checkPermissions);
+
+		public Builder user(com.liferay.portal.kernel.model.User user);
+
+	}
+
+	@ProviderType
+	public interface Factory {
+
+		public Builder create();
+
+	}
 
 }
