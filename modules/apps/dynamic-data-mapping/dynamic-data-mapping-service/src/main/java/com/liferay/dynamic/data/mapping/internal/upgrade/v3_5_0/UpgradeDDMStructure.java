@@ -41,9 +41,7 @@ import com.liferay.portal.kernel.util.Validator;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 /**
  * @author Marcela Cunha
@@ -97,14 +95,11 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 		DDMFormLayout ddmFormLayout =
 			ddmFormLayoutDeserializerDeserializeResponse.getDDMFormLayout();
 
-		Set<Locale> availableLocales = ddmFormLayout.getAvailableLocales();
-
-		List<DDMFormLayoutPage> ddmFormLayoutPages =
-			ddmFormLayout.getDDMFormLayoutPages();
-
 		ddmFormLayout.setPaginationMode(DDMFormLayout.SINGLE_PAGE_MODE);
 
-		for (DDMFormLayoutPage ddmFormLayoutPage : ddmFormLayoutPages) {
+		for (DDMFormLayoutPage ddmFormLayoutPage :
+				ddmFormLayout.getDDMFormLayoutPages()) {
+
 			LocalizedValue localizedValue = ddmFormLayoutPage.getTitle();
 
 			if (localizedValue == null) {
@@ -114,7 +109,7 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 					ddmFormLayout.getDefaultLocale(),
 					LanguageUtil.get(ddmFormLayout.getDefaultLocale(), "page"));
 
-				for (Locale locale : availableLocales) {
+				for (Locale locale : ddmFormLayout.getAvailableLocales()) {
 					localizedValue.addString(
 						locale, LanguageUtil.get(locale, "page"));
 				}
@@ -143,7 +138,7 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 					LanguageUtil.get(
 						ddmFormLayout.getDefaultLocale(), "description"));
 
-				for (Locale locale : availableLocales) {
+				for (Locale locale : ddmFormLayout.getAvailableLocales()) {
 					localizedValue.addString(
 						locale, LanguageUtil.get(locale, "description"));
 				}
