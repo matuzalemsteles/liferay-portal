@@ -2959,7 +2959,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			layout.getPlid());
 
 		if (draftLayout != null) {
-			layoutLocalService.updateParentLayoutId(
+			updateParentLayoutId(
 				groupId, privateLayout, draftLayout.getLayoutId(),
 				parentLayoutId);
 		}
@@ -3027,8 +3027,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			layout.getPlid());
 
 		if (draftLayout != null) {
-			layoutLocalService.updateParentLayoutId(
-				draftLayout.getPlid(), parentPlid);
+			updateParentLayoutId(draftLayout.getPlid(), parentPlid);
 		}
 
 		return layoutLocalService.updateLayout(layout);
