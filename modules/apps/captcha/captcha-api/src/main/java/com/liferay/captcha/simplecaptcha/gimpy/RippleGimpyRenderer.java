@@ -41,12 +41,11 @@ public class RippleGimpyRenderer implements GimpyRenderer {
 	public void gimp(BufferedImage image) {
 		RippleFilter rippleFilter = new RippleFilter();
 
-		rippleFilter.setXAmplitude(2.6F);
-		rippleFilter.setYAmplitude(1.7F);
-		rippleFilter.setXWavelength(15);
-		rippleFilter.setYWavelength(5);
-
 		rippleFilter.setEdgeAction(RippleFilter.CLAMP);
+		rippleFilter.setXAmplitude(2.6F);
+		rippleFilter.setXWavelength(15);
+		rippleFilter.setYAmplitude(1.7F);
+		rippleFilter.setYWavelength(5);
 
 		applyFilter(image, new BufferedImageFilter(rippleFilter));
 	}
