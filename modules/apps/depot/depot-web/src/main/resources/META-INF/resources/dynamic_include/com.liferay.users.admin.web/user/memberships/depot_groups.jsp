@@ -150,6 +150,7 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "asset-
 					);
 
 					var searchContainerData = searchContainer.getData();
+
 					var itemsValues = searchContainerData.split(',');
 
 					if (!itemsValues.includes(itemValue.classPK)) {
