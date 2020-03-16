@@ -34,7 +34,7 @@ import nl.captcha.gimpy.GimpyRenderer;
 public class BlockGimpyRenderer implements GimpyRenderer {
 
 	public BlockGimpyRenderer() {
-		this(_DEF_BLOCK_SIZE);
+		this(3);
 	}
 
 	public BlockGimpyRenderer(int blockSize) {
@@ -42,15 +42,13 @@ public class BlockGimpyRenderer implements GimpyRenderer {
 	}
 
 	@Override
-	public void gimp(BufferedImage image) {
+	public void gimp(BufferedImage bufferedImage) {
 		BlockFilter blockFilter = new BlockFilter();
 
 		blockFilter.setBlockSize(_blockSize);
 
-		applyFilter(image, new BufferedImageFilter(blockFilter));
+		applyFilter(bufferedImage, new BufferedImageFilter(blockFilter));
 	}
-
-	private static final int _DEF_BLOCK_SIZE = 3;
 
 	private final int _blockSize;
 

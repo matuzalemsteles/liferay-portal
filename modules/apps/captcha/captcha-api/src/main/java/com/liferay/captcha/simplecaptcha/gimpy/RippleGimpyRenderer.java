@@ -34,7 +34,7 @@ import nl.captcha.gimpy.GimpyRenderer;
 public class RippleGimpyRenderer implements GimpyRenderer {
 
 	@Override
-	public void gimp(BufferedImage image) {
+	public void gimp(BufferedImage bufferedImage) {
 		RippleFilter rippleFilter = new RippleFilter();
 
 		rippleFilter.setEdgeAction(RippleFilter.CLAMP);
@@ -43,7 +43,7 @@ public class RippleGimpyRenderer implements GimpyRenderer {
 		rippleFilter.setYAmplitude(1.7F);
 		rippleFilter.setYWavelength(5);
 
-		applyFilter(image, new BufferedImageFilter(rippleFilter));
+		applyFilter(bufferedImage, new BufferedImageFilter(rippleFilter));
 	}
 
 }

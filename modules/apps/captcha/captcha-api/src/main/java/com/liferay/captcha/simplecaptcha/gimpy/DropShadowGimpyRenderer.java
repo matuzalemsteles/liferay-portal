@@ -34,7 +34,7 @@ import nl.captcha.gimpy.GimpyRenderer;
 public class DropShadowGimpyRenderer implements GimpyRenderer {
 
 	public DropShadowGimpyRenderer() {
-		this(_DEFAULT_RADIUS, _DEFAULT_OPACITY);
+		this(3, 75);
 	}
 
 	public DropShadowGimpyRenderer(int radius, int opacity) {
@@ -43,18 +43,14 @@ public class DropShadowGimpyRenderer implements GimpyRenderer {
 	}
 
 	@Override
-	public void gimp(BufferedImage image) {
+	public void gimp(BufferedImage bufferedImage) {
 		ShadowFilter shadowFilter = new ShadowFilter();
 
 		shadowFilter.setOpacity(_opacity / 100F);
 		shadowFilter.setRadius(_radius);
 
-		applyFilter(image, new BufferedImageFilter(shadowFilter));
+		applyFilter(bufferedImage, new BufferedImageFilter(shadowFilter));
 	}
-
-	private static final int _DEFAULT_OPACITY = 75;
-
-	private static final int _DEFAULT_RADIUS = 3;
 
 	private final int _opacity;
 	private final int _radius;
