@@ -41,6 +41,13 @@ const AutocompleteMultiSelect = ({
 		highlighted ? 'is-active' : ''
 	} align-items-start form-control form-control-tag-group multi-select-wrapper`;
 
+	const handleBlur = () => {
+		setActive(false);
+		setHighlighted(false);
+		setCurrentIndex(-1);
+		setSearch('');
+	};
+
 	const handleChange = useCallback(
 		newSelectedItems => {
 			if (onChange) {
@@ -60,8 +67,13 @@ const AutocompleteMultiSelect = ({
 			const keyArrowDown = 40;
 			const keyArrowUp = 38;
 			const keyEnter = 13;
+			const keyTab = 9;
 
 			const item = filteredItems[currentIndex];
+
+			if (keyCode === keyTab) {
+				handleBlur();
+			}
 
 			if (keyCode === keyEnter && item) {
 				handleSelect(item);
@@ -123,12 +135,10 @@ const AutocompleteMultiSelect = ({
 
 	useEffect(() => {
 		const listener = handleClickOutside(event => {
-			const listenerCallback = handleClickOutside(() => {
-				setActive(false);
-				setHighlighted(false);
-				setCurrentIndex(-1);
-				setSearch('');
-			}, document.getElementById(`dropDownList${id}`));
+			const listenerCallback = handleClickOutside(
+				handleBlur,
+				document.getElementById(`dropDownList${id}`)
+			);
 
 			listenerCallback(event);
 		}, wrapperRef.current);
