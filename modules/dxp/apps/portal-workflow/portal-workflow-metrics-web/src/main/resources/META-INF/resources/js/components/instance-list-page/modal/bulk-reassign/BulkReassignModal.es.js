@@ -115,8 +115,8 @@ const BulkReassignModal = () => {
 			const {selectedItem = {}} = singleModal || {};
 
 			params.workflowInstanceIds = selectedItems.length
-				? selectedItems.map(item => item.id)
-				: selectedItem.id;
+				? selectedItems.map(({id}) => id)
+				: [selectedItem.id];
 		}
 
 		return params;

@@ -61,9 +61,11 @@ const BulkReassignSelectTasksStep = ({processId, setErrorToast}) => {
 			params.workflowDefinitionId = processId;
 		}
 		else {
+			const {selectedItem = {}} = singleModal || {};
+
 			params.workflowInstanceIds = selectedItems.length
-				? selectedItems.map(item => item.id)
-				: singleModal.selectedItem.id;
+				? selectedItems.map(({id}) => id)
+				: [selectedItem.id];
 		}
 
 		return params;
