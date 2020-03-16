@@ -25,10 +25,11 @@ import nl.captcha.gimpy.GimpyRenderer;
 
 /**
  * Copy of nl.captcha.gimpy.DropShadowGimpyRenderer modified to work with the
- * last version of com.jhlabs filters
+ * latest version of com.jhlabs filters.
  *
  * @author James Childers
  * @author Jorge Díaz
+ * @review
  */
 public class DropShadowGimpyRenderer implements GimpyRenderer {
 

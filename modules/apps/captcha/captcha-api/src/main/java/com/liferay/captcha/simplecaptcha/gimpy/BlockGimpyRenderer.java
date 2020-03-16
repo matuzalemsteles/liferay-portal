@@ -24,11 +24,12 @@ import java.awt.image.BufferedImageFilter;
 import nl.captcha.gimpy.GimpyRenderer;
 
 /**
- * Copy of nl.captcha.gimpy.BlockGimpyRenderer modified to work with the last
- * version of com.jhlabs filters
+ * Copy of nl.captcha.gimpy.BlockGimpyRenderer modified to work with the latest
+ * version of com.jhlabs filters.
  *
  * @author James Childers
  * @author Jorge Díaz
+ * @review
  */
 public class BlockGimpyRenderer implements GimpyRenderer {
 
