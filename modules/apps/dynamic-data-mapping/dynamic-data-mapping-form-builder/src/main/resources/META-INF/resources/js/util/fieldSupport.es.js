@@ -136,6 +136,7 @@ export const normalizeSettingsContextPages = (
 
 		return {
 			...field,
+			instanceId: generateInstanceId(8),
 		};
 	});
 };
