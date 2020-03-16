@@ -20,7 +20,6 @@ import com.jhlabs.image.RippleFilter;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageFilter;
-import java.awt.image.ImageFilter;
 
 import nl.captcha.gimpy.GimpyRenderer;
 
@@ -49,9 +48,7 @@ public class RippleGimpyRenderer implements GimpyRenderer {
 
 		rippleFilter.setEdgeAction(RippleFilter.CLAMP);
 
-		ImageFilter imageFilter = new BufferedImageFilter(rippleFilter);
-
-		applyFilter(image, imageFilter);
+		applyFilter(image, new BufferedImageFilter(rippleFilter));
 	}
 
 }

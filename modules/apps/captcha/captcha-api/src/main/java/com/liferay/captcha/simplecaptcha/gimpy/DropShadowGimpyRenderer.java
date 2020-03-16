@@ -20,7 +20,6 @@ import com.jhlabs.image.ShadowFilter;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageFilter;
-import java.awt.image.ImageFilter;
 
 import nl.captcha.gimpy.GimpyRenderer;
 
@@ -49,9 +48,7 @@ public class DropShadowGimpyRenderer implements GimpyRenderer {
 		shadowFilter.setRadius(_radius);
 		shadowFilter.setOpacity(_opacity / 100F);
 
-		ImageFilter imageFilter = new BufferedImageFilter(shadowFilter);
-
-		applyFilter(image, imageFilter);
+		applyFilter(image, new BufferedImageFilter(shadowFilter));
 	}
 
 	private static final int _DEFAULT_OPACITY = 75;

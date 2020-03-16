@@ -20,7 +20,6 @@ import com.jhlabs.image.BlockFilter;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageFilter;
-import java.awt.image.ImageFilter;
 
 import nl.captcha.gimpy.GimpyRenderer;
 
@@ -47,9 +46,7 @@ public class BlockGimpyRenderer implements GimpyRenderer {
 
 		blockFilter.setBlockSize(_blockSize);
 
-		ImageFilter imageFilter = new BufferedImageFilter(blockFilter);
-
-		applyFilter(image, imageFilter);
+		applyFilter(image, new BufferedImageFilter(blockFilter));
 	}
 
 	private static final int _DEF_BLOCK_SIZE = 3;
