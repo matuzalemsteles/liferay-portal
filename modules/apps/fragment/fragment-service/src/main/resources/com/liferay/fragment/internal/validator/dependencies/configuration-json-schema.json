@@ -330,6 +330,10 @@
 								{
 									"additionalProperties": false,
 									"properties": {
+										"errorMessage": {
+											"title": "The ErrorMessage Schema",
+											"type": "string"
+										},
 										"max": {
 											"title": "The Max Schema",
 											"type": "number"
@@ -346,6 +350,10 @@
 								{
 									"additionalProperties": false,
 									"properties": {
+										"errorMessage": {
+											"title": "The ErrorMessage Schema",
+											"type": "string"
+										},
 										"maxLength": {
 											"title": "The MaxLength Schema",
 											"type": "number"
@@ -366,6 +374,10 @@
 								{
 									"additionalProperties": false,
 									"properties": {
+										"errorMessage": {
+											"title": "The ErrorMessage Schema",
+											"type": "string"
+										},
 										"regexp": {
 											"title": "The RegExp Schema",
 											"type": "string"
@@ -380,10 +392,6 @@
 								}
 							],
 							"properties": {
-								"errorMessage": {
-									"title": "The ErrorMessage Schema",
-									"type": "string"
-								},
 								"type": {
 									"enum": [
 										"email",
