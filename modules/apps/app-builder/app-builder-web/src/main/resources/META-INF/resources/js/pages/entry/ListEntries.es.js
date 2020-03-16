@@ -50,26 +50,31 @@ const ListEntries = withRouter(({history, location}) => {
 		Promise.all([
 			getItem(`/o/data-engine/v2.0/data-definitions/${dataDefinitionId}`),
 			getItem(`/o/data-engine/v2.0/data-list-views/${dataListViewId}`),
-		]).then(([dataDefinition, dataListView]) => {
-			setState(prevState => ({
-				...prevState,
-				dataDefinition: {
-					...prevState.dataDefinition,
-					...dataDefinition,
-				},
-				dataListView: {
-					...prevState.dataListView,
-					...dataListView,
-				},
-				isLoading: false,
-			}));
-		}).catch(() => {
-			setState(prevState => ({
-				...prevState,
-				isLoading: false
-			}));
-			errorToast(Liferay.Language.get('an-unexpected-error-occurred'))
-		});
+		])
+			.then(([dataDefinition, dataListView]) => {
+				setState(prevState => ({
+					...prevState,
+					dataDefinition: {
+						...prevState.dataDefinition,
+						...dataDefinition,
+					},
+					dataListView: {
+						...prevState.dataListView,
+						...dataListView,
+					},
+					isLoading: false,
+				}));
+			})
+			.catch(() => {
+				setState(prevState => ({
+					...prevState,
+					isLoading: false,
+				}));
+
+				errorToast(
+					Liferay.Language.get('an-unexpected-error-occurred')
+				);
+			});
 	}, [dataDefinitionId, dataListViewId]);
 
 	const {dataDefinition, dataListView, isLoading} = state;
