@@ -56,6 +56,7 @@ const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
 const HOUR_IN_MILLISECONDS = 60 * 60 * 1000;
 
 const LAST_24_HOURS = 'last-24-hours';
+const LAST_7_DAYS = 'last-7-days';
 
 const METRICS_STATIC_VALUES = {
 	analyticsReportsHistoricalReads: {
@@ -419,6 +420,11 @@ export default function Chart({
 									stroke: CHART_COLORS.cartesianGrid,
 								}}
 								dataKey="label"
+								interval={
+									chartState.timeSpanOption === LAST_7_DAYS
+										? 'preserveStartEnd'
+										: 4
+								}
 								tickFormatter={xAxisFormatter}
 								tickLine={false}
 							/>
