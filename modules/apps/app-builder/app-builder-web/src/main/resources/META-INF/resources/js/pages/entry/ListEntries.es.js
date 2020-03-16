@@ -22,7 +22,7 @@ import ListView from '../../components/list-view/ListView.es';
 import {Loading} from '../../components/loading/Loading.es';
 import {toQuery, toQueryString} from '../../hooks/useQuery.es';
 import {confirmDelete, getItem} from '../../utils/client.es';
-import {successToast} from '../../utils/toast.es';
+import {errorToast, successToast} from '../../utils/toast.es';
 import {FieldValuePreview} from './FieldPreview.es';
 import {ACTIONS, PermissionsContext} from './PermissionsContext.es';
 
@@ -63,6 +63,12 @@ const ListEntries = withRouter(({history, location}) => {
 				},
 				isLoading: false,
 			}));
+		}).catch(() => {
+			setState(prevState => ({
+				...prevState,
+				isLoading: false
+			}));
+			errorToast(Liferay.Language.get('an-unexpected-error-occurred'))
 		});
 	}, [dataDefinitionId, dataListViewId]);
 
