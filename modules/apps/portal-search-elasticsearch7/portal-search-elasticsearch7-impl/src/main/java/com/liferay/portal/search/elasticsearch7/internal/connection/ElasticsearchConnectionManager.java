@@ -227,7 +227,7 @@ public class ElasticsearchConnectionManager
 
 		if (_operationMode == null) {
 			if (_log.isWarnEnabled()) {
-				_log.warn("Operation Mode is not set");
+				_log.warn("Operation mode is not set");
 			}
 
 			return null;

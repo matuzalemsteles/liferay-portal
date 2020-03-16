@@ -97,7 +97,7 @@ public class ElasticsearchConnectionConfigurationModelListener
 			}
 		}
 
-		_log.error("Unable to validate the Network Host Addresses");
+		_log.error("Unable to validate network host addresses");
 
 		throw new Exception(
 			_getCauseMessage("please-set-at-least-one-network-host-address"));
