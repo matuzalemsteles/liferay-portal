@@ -12,7 +12,7 @@
 import {useIsMounted} from 'frontend-js-react-web';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Cell, Pie, PieChart} from 'recharts';
+import {Cell, Pie, PieChart, Tooltip} from 'recharts';
 
 import {numberFormat} from '../utils/numberFormat';
 import Hint from './Hint';
@@ -29,7 +29,7 @@ const PIE_CHART_SIZES = {
 	innerRadius: 25,
 	paddingAngle: 5,
 	radius: 40,
-	width: 80,
+	width: 100,
 };
 
 /**
@@ -42,6 +42,7 @@ const getColorByName = name => COLORS_MAP[name] || FALLBACK_COLOR;
 export default function TrafficSources({dataProvider, languageTag}) {
 	const isMounted = useIsMounted();
 	const [trafficSources, setTrafficSources] = useState([]);
+	const [highlighted, setHighlighted] = useState(null);
 
 	useEffect(() => {
 		dataProvider().then(response => {
@@ -52,6 +53,14 @@ export default function TrafficSources({dataProvider, languageTag}) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	function handleLegendMouseEnter(name) {
+		setHighlighted(name);
+	}
+
+	function handleLegendMouseLeave() {
+		setHighlighted(null);
+	}
+
 	return (
 		<div className="pie-chart-wrapper">
 			<div className="pie-chart-wrapper--legend">
@@ -60,7 +69,12 @@ export default function TrafficSources({dataProvider, languageTag}) {
 						{trafficSources.map(entry => {
 							return (
 								<tr key={entry.name}>
-									<td>
+									<td
+										onMouseOut={handleLegendMouseLeave}
+										onMouseOver={() =>
+											handleLegendMouseEnter(entry.name)
+										}
+									>
 										<span
 											className="pie-chart-wrapper--legend--dot"
 											style={{
@@ -70,8 +84,16 @@ export default function TrafficSources({dataProvider, languageTag}) {
 											}}
 										></span>
 									</td>
-									<td className="pie-chart-wrapper--legend--title pr-1 text-secondary">
+									<td
+										className="pie-chart-wrapper--legend--title pr-1 text-secondary"
+										onMouseOut={handleLegendMouseLeave}
+										onMouseOver={() =>
+											handleLegendMouseEnter(entry.name)
+										}
+									>
 										{entry.title}
+									</td>
+									<td className="text-secondary">
 										<Hint
 											message={entry.helpMessage}
 											title={entry.title}
@@ -105,11 +127,79 @@ export default function TrafficSources({dataProvider, languageTag}) {
 						{trafficSources.map((entry, i) => {
 							const fillColor = getColorByName(entry.name);
 
-							return <Cell fill={fillColor} key={i} />;
+							return (
+								<Cell
+									fill={fillColor}
+									key={i}
+									onMouseOut={handleLegendMouseLeave}
+									onMouseOver={() =>
+										handleLegendMouseEnter(entry.name)
+									}
+									style={{
+										opacity:
+											highlighted &&
+											entry.name !== highlighted
+												? '.4'
+												: '1',
+									}}
+								/>
+							);
 						})}
 					</Pie>
+
+					<Tooltip
+						content={<TrafficSourcesCustomTooltip />}
+						formatter={(value, name, iconType) => {
+							return [
+								numberFormat(languageTag, value),
+								name,
+								iconType,
+							];
+						}}
+						separator={': '}
+					/>
 				</PieChart>
 			</div>
+		</div>
+	);
+}
+
+function TrafficSourcesCustomTooltip(props) {
+	const {formatter, payload, separator = ''} = props;
+
+	return (
+		<div className="custom-tooltip">
+			<p className="mb-1 mt-0">
+				<b>{payload.length && payload[0].payload.title}</b>
+			</p>
+
+			<ul className="list-unstyled mb-0">
+				<>
+					{payload.map(item => {
+						// eslint-disable-next-line no-unused-vars
+						const [value, _name, iconType] = formatter
+							? formatter(item.value, item.name, item.iconType)
+							: [item.value, item.name, item.iconType];
+
+						const {payload} = item;
+
+						return (
+							<React.Fragment key={item.name}>
+								<li>
+									{Liferay.Language.get('visitors')}
+									{separator}
+									<b>{value}</b>
+								</li>
+								<li>
+									{Liferay.Language.get('traffic-share')}
+									{separator}
+									<b>{`${payload.share * 100}%`}</b>
+								</li>
+							</React.Fragment>
+						);
+					})}
+				</>
+			</ul>
 		</div>
 	);
 }

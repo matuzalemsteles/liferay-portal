@@ -62,7 +62,7 @@ export default function({context, props}) {
 	}
 
 	return (
-		<div className="p-3">
+		<div className="overflow-hidden p-3">
 			<BasicInformation
 				authorName={authorName}
 				languageTag={languageTag}
