@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.ProxyUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.osgi.service.component.ComponentServiceObjects;
@@ -95,7 +96,7 @@ public class MessageBoardMessageResourceFactoryImpl
 	private Object _invoke(
 			Method method, Object[] arguments, boolean checkPermissions,
 			User user)
-		throws Exception {
+		throws Throwable {
 
 		String name = PrincipalThreadLocal.getName();
 
@@ -124,6 +125,9 @@ public class MessageBoardMessageResourceFactoryImpl
 
 		try {
 			return method.invoke(messageBoardMessageResource, arguments);
+		}
+		catch (InvocationTargetException invocationTargetException) {
+			throw invocationTargetException.getTargetException();
 		}
 		finally {
 			_componentServiceObjects.ungetService(messageBoardMessageResource);

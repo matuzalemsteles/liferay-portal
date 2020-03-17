@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.workflow.metrics.rest.resource.v1_0.SLAResource;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.osgi.service.component.ComponentServiceObjects;
@@ -92,7 +93,7 @@ public class SLAResourceFactoryImpl implements SLAResource.Factory {
 	private Object _invoke(
 			Method method, Object[] arguments, boolean checkPermissions,
 			User user)
-		throws Exception {
+		throws Throwable {
 
 		String name = PrincipalThreadLocal.getName();
 
@@ -120,6 +121,9 @@ public class SLAResourceFactoryImpl implements SLAResource.Factory {
 
 		try {
 			return method.invoke(slaResource, arguments);
+		}
+		catch (InvocationTargetException invocationTargetException) {
+			throw invocationTargetException.getTargetException();
 		}
 		finally {
 			_componentServiceObjects.ungetService(slaResource);
