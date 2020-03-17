@@ -3049,6 +3049,16 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		Layout layout = updateParentLayoutId(plid, parentPlid);
 
+		// Draft layout
+
+		Layout draftLayout = fetchLayout(
+			classNameLocalService.getClassNameId(Layout.class),
+			layout.getPlid());
+
+		if (draftLayout != null) {
+			layoutLocalService.updatePriority(draftLayout.getPlid(), priority);
+		}
+
 		return layoutLocalService.updatePriority(layout, priority);
 	}
 
@@ -3074,7 +3084,17 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 			layout.setPriority(nextPriority);
 
-			layoutPersistence.update(layout);
+			layout = layoutPersistence.update(layout);
+
+			Layout draftLayout = fetchLayout(
+				classNameLocalService.getClassNameId(Layout.class),
+				layout.getPlid());
+
+			if (draftLayout != null) {
+				draftLayout.setPriority(nextPriority);
+
+				layoutPersistence.update(draftLayout);
+			}
 		}
 	}
 
@@ -3109,6 +3129,16 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		layout.setPriority(nextPriority);
 
 		layout = layoutPersistence.update(layout);
+
+		Layout draftLayout = fetchLayout(
+			classNameLocalService.getClassNameId(Layout.class),
+			layout.getPlid());
+
+		if (draftLayout != null) {
+			draftLayout.setPriority(nextPriority);
+
+			draftLayout = layoutPersistence.update(draftLayout);
+		}
 
 		List<Layout> layouts = layoutPersistence.findByG_P_P(
 			layout.getGroupId(), layout.isPrivateLayout(),
@@ -3147,6 +3177,16 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			curLayout.setPriority(curNextPriority);
 
 			curLayout = layoutPersistence.update(curLayout);
+
+			draftLayout = fetchLayout(
+				classNameLocalService.getClassNameId(Layout.class),
+				curLayout.getPlid());
+
+			if (draftLayout != null) {
+				draftLayout.setPriority(nextPriority);
+
+				layoutPersistence.update(draftLayout);
+			}
 
 			if (curLayout.equals(layout)) {
 				layout = curLayout;
