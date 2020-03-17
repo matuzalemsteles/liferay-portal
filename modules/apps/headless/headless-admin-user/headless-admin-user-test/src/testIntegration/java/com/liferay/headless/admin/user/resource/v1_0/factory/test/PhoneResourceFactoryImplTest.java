@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.model.ListType;
 import com.liferay.portal.kernel.model.ListTypeConstants;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.ListTypeLocalService;
 import com.liferay.portal.kernel.service.PhoneLocalService;
@@ -63,63 +64,49 @@ public class PhoneResourceFactoryImplTest {
 	public void setUp() throws Exception {
 		_organization = OrganizationTestUtil.addOrganization();
 
-		_user = UserTestUtil.addCompanyAdminUser(
+		_companyAdminUser = UserTestUtil.addCompanyAdminUser(
 			_companyLocalService.getCompany(_organization.getCompanyId()));
 	}
 
 	@Test
-	public void testBuildWithAdminUser() throws Exception {
-		com.liferay.portal.kernel.model.Phone serviceBuiderPhone =
-			OrganizationTestUtil.addPhone(_organization);
-
-		PhoneResource phoneResource = PhoneResource.builder(
-		).user(
-			_user
-		).build();
-
-		Page<Phone> page = phoneResource.getOrganizationPhonesPage(
-			String.valueOf(_organization.getOrganizationId()));
-
-		Assert.assertEquals(1, page.getTotalCount());
-
-		Collection<Phone> phones = page.getItems();
-
-		Iterator<Phone> iterator = phones.iterator();
-
-		Phone phone = iterator.next();
-
-		Assert.assertEquals(
-			Long.valueOf(serviceBuiderPhone.getPhoneId()), phone.getId());
+	public void testCheckPermissionsWithCompanyAdminUser() throws Exception {
+		_testCheckPermissions(
+			PhoneResource.builder(
+			).user(
+				_companyAdminUser
+			).build());
 	}
 
 	@Test
-	public void testBuildWithRegularUser() throws Exception {
-		com.liferay.portal.kernel.model.Phone serviceBuiderPhone =
-			OrganizationTestUtil.addPhone(_organization);
-
+	public void testCheckPermissionsWithUser1() throws Exception {
 		User user = UserTestUtil.addUser();
 
 		try {
-			PhoneResource phoneResource = PhoneResource.builder(
-			).checkPermissions(
-				false
-			).user(
-				user
-			).build();
+			_testCheckPermissions(
+				PhoneResource.builder(
+				).checkPermissions(
+					false
+				).user(
+					user
+				).build());
+		}
+		finally {
+			_userLocalService.deleteUser(user);
+		}
+	}
 
-			Page<Phone> page = phoneResource.getOrganizationPhonesPage(
-				String.valueOf(_organization.getOrganizationId()));
+	@Test(expected = PrincipalException.MustHavePermission.class)
+	public void testCheckPermissionsWithUser2() throws Exception {
+		User user = UserTestUtil.addUser();
 
-			Assert.assertEquals(1, page.getTotalCount());
-
-			Collection<Phone> phones = page.getItems();
-
-			Iterator<Phone> iterator = phones.iterator();
-
-			Phone phone = iterator.next();
-
-			Assert.assertEquals(
-				Long.valueOf(serviceBuiderPhone.getPhoneId()), phone.getId());
+		try {
+			_testCheckPermissions(
+				PhoneResource.builder(
+				).checkPermissions(
+					true
+				).user(
+					user
+				).build());
 		}
 		finally {
 			_userLocalService.deleteUser(user);
@@ -127,10 +114,10 @@ public class PhoneResourceFactoryImplTest {
 	}
 
 	@Test
-	public void testBuildWithTransaction() throws Throwable {
+	public void testTransaction() throws Throwable {
 		PhoneResource phoneResource = PhoneResource.builder(
 		).user(
-			_user
+			_companyAdminUser
 		).build();
 
 		Phone expectedPhone = _randomPhone();
@@ -148,7 +135,8 @@ public class PhoneResourceFactoryImplTest {
 					ListType listType = listTypes.get(0);
 
 					_phoneLocalService.addPhone(
-						_user.getUserId(), _organization.getModelClassName(),
+						_companyAdminUser.getUserId(),
+						_organization.getModelClassName(),
 						_organization.getOrganizationId(),
 						expectedPhone.getPhoneNumber(),
 						expectedPhone.getExtension(), listType.getListTypeId(),
@@ -197,6 +185,27 @@ public class PhoneResourceFactoryImplTest {
 		};
 	}
 
+	private void _testCheckPermissions(PhoneResource phoneResource)
+		throws Exception {
+
+		com.liferay.portal.kernel.model.Phone serviceBuiderPhone =
+			OrganizationTestUtil.addPhone(_organization);
+
+		Page<Phone> page = phoneResource.getOrganizationPhonesPage(
+			String.valueOf(_organization.getOrganizationId()));
+
+		Assert.assertEquals(1, page.getTotalCount());
+
+		Collection<Phone> phones = page.getItems();
+
+		Iterator<Phone> iterator = phones.iterator();
+
+		Phone phone = iterator.next();
+
+		Assert.assertEquals(
+			Long.valueOf(serviceBuiderPhone.getPhoneId()), phone.getId());
+	}
+
 	private static final TransactionConfig _REQUIRES_NEW_TRANSACTION_CONFIG =
 		TransactionConfig.Factory.create(
 			Propagation.REQUIRES_NEW, new Class<?>[] {Exception.class});
@@ -204,6 +213,9 @@ public class PhoneResourceFactoryImplTest {
 	private static final TransactionConfig _SUPPORTS_TRANSACTION_CONFIG =
 		TransactionConfig.Factory.create(
 			Propagation.SUPPORTS, new Class<?>[] {Exception.class});
+
+	@DeleteAfterTestRun
+	private User _companyAdminUser;
 
 	@Inject
 	private CompanyLocalService _companyLocalService;
@@ -216,9 +228,6 @@ public class PhoneResourceFactoryImplTest {
 
 	@Inject
 	private PhoneLocalService _phoneLocalService;
-
-	@DeleteAfterTestRun
-	private User _user;
 
 	@Inject
 	private UserLocalService _userLocalService;
