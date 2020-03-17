@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.ListTypeLocalService;
 import com.liferay.portal.kernel.service.PhoneLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.OrganizationTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
@@ -43,7 +44,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,32 +92,38 @@ public class PhoneResourceFactoryImplTest {
 			Long.valueOf(serviceBuiderPhone.getPhoneId()), phone.getId());
 	}
 
-	@Ignore
 	@Test
 	public void testBuildWithRegularUser() throws Exception {
 		com.liferay.portal.kernel.model.Phone serviceBuiderPhone =
 			OrganizationTestUtil.addPhone(_organization);
 
-		PhoneResource phoneResource = PhoneResource.builder(
-		).checkPermissions(
-			false
-		).user(
-			_user
-		).build();
+		User user = UserTestUtil.addUser();
 
-		Page<Phone> page = phoneResource.getOrganizationPhonesPage(
-			String.valueOf(_organization.getOrganizationId()));
+		try {
+			PhoneResource phoneResource = PhoneResource.builder(
+			).checkPermissions(
+				false
+			).user(
+				user
+			).build();
 
-		Assert.assertEquals(1, page.getTotalCount());
+			Page<Phone> page = phoneResource.getOrganizationPhonesPage(
+				String.valueOf(_organization.getOrganizationId()));
 
-		Collection<Phone> phones = page.getItems();
+			Assert.assertEquals(1, page.getTotalCount());
 
-		Iterator<Phone> iterator = phones.iterator();
+			Collection<Phone> phones = page.getItems();
 
-		Phone phone = iterator.next();
+			Iterator<Phone> iterator = phones.iterator();
 
-		Assert.assertEquals(
-			Long.valueOf(serviceBuiderPhone.getPhoneId()), phone.getId());
+			Phone phone = iterator.next();
+
+			Assert.assertEquals(
+				Long.valueOf(serviceBuiderPhone.getPhoneId()), phone.getId());
+		}
+		finally {
+			_userLocalService.deleteUser(user);
+		}
 	}
 
 	@Test
@@ -213,5 +219,8 @@ public class PhoneResourceFactoryImplTest {
 
 	@DeleteAfterTestRun
 	private User _user;
+
+	@Inject
+	private UserLocalService _userLocalService;
 
 }
