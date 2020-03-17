@@ -12,6 +12,7 @@ import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.ProxyUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.osgi.service.component.ComponentServiceObjects;
@@ -70,7 +71,7 @@ public class ${schemaName}ResourceFactoryImpl implements ${schemaName}Resource.F
 		${schemaName}Resource.FactoryHolder.factory = null;
 	}
 
-	private Object _invoke(Method method, Object[] arguments, boolean checkPermissions, User user) throws Exception {
+	private Object _invoke(Method method, Object[] arguments, boolean checkPermissions, User user) throws Throwable {
 		String name = PrincipalThreadLocal.getName();
 
 		PrincipalThreadLocal.setName(user.getUserId());
@@ -94,6 +95,9 @@ public class ${schemaName}ResourceFactoryImpl implements ${schemaName}Resource.F
 
 		try {
 			return method.invoke(${schemaVarName}Resource, arguments);
+		}
+		catch (InvocationTargetException invocationTargetException) {
+			throw invocationTargetException.getTargetException();
 		}
 		finally {
 			_componentServiceObjects.ungetService(${schemaVarName}Resource);
