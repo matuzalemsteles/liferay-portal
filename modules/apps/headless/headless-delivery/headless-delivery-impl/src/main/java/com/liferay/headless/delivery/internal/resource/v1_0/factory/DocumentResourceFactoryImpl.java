@@ -101,8 +101,14 @@ public class DocumentResourceFactoryImpl implements DocumentResource.Factory {
 		PermissionChecker permissionChecker =
 			PermissionThreadLocal.getPermissionChecker();
 
-		PermissionThreadLocal.setPermissionChecker(
-			_permissionCheckerFactory.create(user));
+		if (checkPermissions) {
+			PermissionThreadLocal.setPermissionChecker(
+				_defaultPermissionCheckerFactory.create(user));
+		}
+		else {
+			PermissionThreadLocal.setPermissionChecker(
+				_liberalPermissionCheckerFactory.create(user));
+		}
 
 		DocumentResource documentResource =
 			_componentServiceObjects.getService();
@@ -132,7 +138,10 @@ public class DocumentResourceFactoryImpl implements DocumentResource.Factory {
 	private ComponentServiceObjects<DocumentResource> _componentServiceObjects;
 
 	@Reference
-	private PermissionCheckerFactory _permissionCheckerFactory;
+	private PermissionCheckerFactory _defaultPermissionCheckerFactory;
+
+	@Reference(target = "(permission.checker.type=liberal)")
+	private PermissionCheckerFactory _liberalPermissionCheckerFactory;
 
 	@Reference
 	private UserLocalService _userLocalService;
