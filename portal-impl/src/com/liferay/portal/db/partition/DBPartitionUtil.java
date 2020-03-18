@@ -49,7 +49,9 @@ import javax.sql.DataSource;
  */
 public class DBPartitionUtil {
 
-	public static boolean addDBPartition(long companyId) throws PortalException {
+	public static boolean addDBPartition(long companyId)
+		throws PortalException {
+
 		if (!_DATABASE_PARTITION_ENABLED || (companyId == _defaultCompanyId)) {
 			return false;
 		}
@@ -150,12 +152,10 @@ public class DBPartitionUtil {
 			}
 
 			@Override
-			public Connection getConnection(
-					String username, String password)
+			public Connection getConnection(String username, String password)
 				throws SQLException {
 
-				Connection connection = super.getConnection(
-					username, password);
+				Connection connection = super.getConnection(username, password);
 
 				_useSchema(connection);
 
@@ -183,9 +183,7 @@ public class DBPartitionUtil {
 		return false;
 	}
 
-	private static void _useSchema(Connection connection)
-		throws SQLException {
-
+	private static void _useSchema(Connection connection) throws SQLException {
 		if (connection.isReadOnly()) {
 			return;
 		}

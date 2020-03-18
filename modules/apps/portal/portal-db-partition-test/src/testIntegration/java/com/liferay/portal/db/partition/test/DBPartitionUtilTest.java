@@ -162,12 +162,6 @@ public class DBPartitionUtilTest {
 	}
 
 	@Test
-	public void testAddDefaultDBPartition() throws PortalException {
-		Assert.assertFalse(
-			DBPartitionUtil.addDBPartition(_portal.getDefaultCompanyId()));
-	}
-
-	@Test
 	public void testAddDBPartition() throws Exception {
 		CurrentConnection defaultCurrentConnection =
 			CurrentConnectionUtil.getCurrentConnection();
@@ -198,6 +192,12 @@ public class DBPartitionUtilTest {
 				CurrentConnectionUtil.class, "_currentConnection",
 				defaultCurrentConnection);
 		}
+	}
+
+	@Test
+	public void testAddDefaultDBPartition() throws PortalException {
+		Assert.assertFalse(
+			DBPartitionUtil.addDBPartition(_portal.getDefaultCompanyId()));
 	}
 
 	private static String _getSchemaName() {
