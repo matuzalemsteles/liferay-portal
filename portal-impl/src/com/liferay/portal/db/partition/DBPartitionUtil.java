@@ -49,7 +49,7 @@ import javax.sql.DataSource;
  */
 public class DBPartitionUtil {
 
-	public static boolean addPartition(long companyId) throws PortalException {
+	public static boolean addDBPartition(long companyId) throws PortalException {
 		if (!_DATABASE_PARTITION_ENABLED || (companyId == _defaultCompanyId)) {
 			return false;
 		}
@@ -94,7 +94,7 @@ public class DBPartitionUtil {
 				}
 			}
 
-			_usePartition(connection);
+			_useSchema(connection);
 		}
 		catch (Exception exception) {
 			throw new PortalException(exception);
@@ -103,7 +103,7 @@ public class DBPartitionUtil {
 		return true;
 	}
 
-	public static boolean removePartition(long companyId) {
+	public static boolean removeDBPartition(long companyId) {
 		return _DATABASE_PARTITION_ENABLED;
 	}
 
@@ -144,7 +144,7 @@ public class DBPartitionUtil {
 			public Connection getConnection() throws SQLException {
 				Connection connection = super.getConnection();
 
-				_usePartition(connection);
+				_useSchema(connection);
 
 				return connection;
 			}
@@ -157,7 +157,7 @@ public class DBPartitionUtil {
 				Connection connection = super.getConnection(
 					username, password);
 
-				_usePartition(connection);
+				_useSchema(connection);
 
 				return connection;
 			}
@@ -183,7 +183,7 @@ public class DBPartitionUtil {
 		return false;
 	}
 
-	private static void _usePartition(Connection connection)
+	private static void _useSchema(Connection connection)
 		throws SQLException {
 
 		if (connection.isReadOnly()) {

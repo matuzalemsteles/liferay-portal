@@ -201,7 +201,7 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 				CompanyThreadLocal.setInitializingCompanyId(
 					company.getCompanyId())) {
 
-			if (DBPartitionUtil.addPartition(company.getCompanyId())) {
+			if (DBPartitionUtil.addDBPartition(company.getCompanyId())) {
 				dlFileEntryTypeLocalService.
 					createBasicDocumentDLFileEntryType();
 			}
@@ -1205,7 +1205,7 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 		final Company company = companyPersistence.findByPrimaryKey(companyId);
 
-		if (DBPartitionUtil.removePartition(companyId)) {
+		if (DBPartitionUtil.removeDBPartition(companyId)) {
 			return company;
 		}
 

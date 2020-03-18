@@ -168,13 +168,13 @@ public class DBPartitionUtilTest {
 	}
 
 	@Test
-	public void testAddDefaultPartition() throws PortalException {
+	public void testAddDefaultDBPartition() throws PortalException {
 		Assert.assertFalse(
-			DBPartitionUtil.addPartition(_portal.getDefaultCompanyId()));
+			DBPartitionUtil.addDBPartition(_portal.getDefaultCompanyId()));
 	}
 
 	@Test
-	public void testAddPartition() throws Exception {
+	public void testAddDBPartition() throws Exception {
 		CurrentConnection defaultCurrentConnection =
 			CurrentConnectionUtil.getCurrentConnection();
 
@@ -192,7 +192,7 @@ public class DBPartitionUtilTest {
 				CurrentConnectionUtil.class, "_currentConnection",
 				currentConnection);
 
-			DBPartitionUtil.addPartition(_COMPANY_ID);
+			DBPartitionUtil.addDBPartition(_COMPANY_ID);
 
 			try (Statement statement = _connection.createStatement()) {
 				statement.execute(
