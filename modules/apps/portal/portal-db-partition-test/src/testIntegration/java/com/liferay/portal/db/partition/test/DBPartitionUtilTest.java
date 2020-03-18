@@ -79,7 +79,6 @@ public class DBPartitionUtilTest {
 		_currentDatabasePartitionEnabledValue =
 			ReflectionTestUtil.getAndSetFieldValue(
 				DBPartitionUtil.class, "_DATABASE_PARTITION_ENABLED", true);
-
 		_currentDatabasePartitionInstanceIdValue =
 			ReflectionTestUtil.getAndSetFieldValue(
 				DBPartitionUtil.class, "_DATABASE_PARTITION_INSTANCE_ID",
