@@ -139,10 +139,10 @@ public class DBPartitionUtilTest {
 
 			statement.executeUpdate(
 				StringBundler.concat(
-					"create table ", _getSchemaName(), ".testTable ",
+					"create table ", _getSchemaName(), ".TestTable ",
 					"(testColumn int)"));
 
-			statement.execute("select 1 from testTable");
+			statement.execute("select 1 from TestTable");
 
 			statement.execute("use " + _defaultSchemaName);
 		}
