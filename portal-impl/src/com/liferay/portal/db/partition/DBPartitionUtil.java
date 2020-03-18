@@ -116,53 +116,53 @@ public class DBPartitionUtil {
 	public static DataSource wrapDataSource(DataSource dataSource)
 		throws SQLException {
 
-		if (_DATABASE_PARTITION_ENABLED) {
-			DB db = DBManagerUtil.getDB(
-				DBManagerUtil.getDBType(DialectDetector.getDialect(dataSource)),
-				dataSource);
-
-			if (db.getDBType() != DBType.MYSQL) {
-				throw new Error("Database Partition requires MySQL");
-			}
-
-			if (Validator.isNull(_DATABASE_PARTITION_INSTANCE_ID)) {
-				throw new Error(
-					"Database Partition requires setting the property " +
-						"database.partition.instance.id");
-			}
-
-			try (Connection connection = dataSource.getConnection()) {
-				_defaultSchemaName = connection.getCatalog();
-			}
-
-			dataSource = new DataSourceWrapper(dataSource) {
-
-				@Override
-				public Connection getConnection() throws SQLException {
-					Connection connection = super.getConnection();
-
-					_usePartition(connection);
-
-					return connection;
-				}
-
-				@Override
-				public Connection getConnection(
-						String username, String password)
-					throws SQLException {
-
-					Connection connection = super.getConnection(
-						username, password);
-
-					_usePartition(connection);
-
-					return connection;
-				}
-
-			};
+		if (!_DATABASE_PARTITION_ENABLED) {
+			return dataSource;
 		}
 
-		return dataSource;
+		DB db = DBManagerUtil.getDB(
+			DBManagerUtil.getDBType(DialectDetector.getDialect(dataSource)),
+			dataSource);
+
+		if (db.getDBType() != DBType.MYSQL) {
+			throw new Error("Database Partition requires MySQL");
+		}
+
+		if (Validator.isNull(_DATABASE_PARTITION_INSTANCE_ID)) {
+			throw new Error(
+				"Database Partition requires setting the property " +
+					"database.partition.instance.id");
+		}
+
+		try (Connection connection = dataSource.getConnection()) {
+			_defaultSchemaName = connection.getCatalog();
+		}
+
+		return new DataSourceWrapper(dataSource) {
+
+			@Override
+			public Connection getConnection() throws SQLException {
+				Connection connection = super.getConnection();
+
+				_usePartition(connection);
+
+				return connection;
+			}
+
+			@Override
+			public Connection getConnection(
+					String username, String password)
+				throws SQLException {
+
+				Connection connection = super.getConnection(
+					username, password);
+
+				_usePartition(connection);
+
+				return connection;
+			}
+
+		};
 	}
 
 	private static String _getSchemaName(long companyId) {
