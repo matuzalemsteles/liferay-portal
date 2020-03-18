@@ -153,7 +153,7 @@ public class RatingsTag extends IncludeTag {
 				).put(
 					"classPK", _classPK
 				).put(
-					"enabled", _isEnabled(themeDisplay, _inTrash)
+					"enabled", _isEnabled(themeDisplay)
 				).put(
 					"initialLiked", _isThumbUp(_getUserScore(ratingsEntry))
 				).put(
@@ -288,8 +288,8 @@ public class RatingsTag extends IncludeTag {
 		return userScore;
 	}
 
-	private boolean _isEnabled(ThemeDisplay themeDisplay, boolean inTrash) {
-		if (!inTrash) {
+	private boolean _isEnabled(ThemeDisplay themeDisplay) {
+		if (!_inTrash) {
 			Group group = themeDisplay.getSiteGroup();
 
 			if (!group.isStagingGroup() && !group.isStagedRemotely()) {
