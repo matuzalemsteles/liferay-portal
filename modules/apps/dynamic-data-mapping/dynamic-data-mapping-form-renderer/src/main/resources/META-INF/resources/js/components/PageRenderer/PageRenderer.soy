@@ -228,7 +228,7 @@
 							'fieldFocused': $_handleFieldFocused
 						] /}
 						{param pageIndex: $pageIndex /}
-						{param ref: 'pageRendererFieldRef' + $field.instanceId + $rowIndex + $columnIndex + $pageIndex /}
+						{param ref: 'pageRendererFieldRef' + $field.instanceId + $field.type + $rowIndex + $columnIndex + $pageIndex /}
 						{param spritemap: $spritemap /}
 					{/delcall}
 				</div>
