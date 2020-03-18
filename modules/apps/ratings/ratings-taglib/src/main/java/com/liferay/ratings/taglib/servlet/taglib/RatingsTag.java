@@ -150,8 +150,6 @@ public class RatingsTag extends IncludeTag {
 
 			double userScore = _getUserScore(ratingsEntry);
 
-			boolean thumbUp = _isThumbUp(userScore);
-
 			String url = _getURL(themeDisplay);
 
 			httpServletRequest.setAttribute(
@@ -163,7 +161,7 @@ public class RatingsTag extends IncludeTag {
 				).put(
 					"enabled", _isEnabled(themeDisplay, inTrash)
 				).put(
-					"initialLiked", thumbUp
+					"initialLiked", _isThumbUp(userScore)
 				).put(
 					"initialNegativeVotes",
 					_getTotalEntries(ratingsStats) - positiveVotes
@@ -178,7 +176,7 @@ public class RatingsTag extends IncludeTag {
 				).put(
 					"thumbDown", _isThumbDown(userScore)
 				).put(
-					"thumbUp", thumbUp
+					"thumbUp", _isThumbUp(userScore)
 				).put(
 					"url", url
 				).build());
