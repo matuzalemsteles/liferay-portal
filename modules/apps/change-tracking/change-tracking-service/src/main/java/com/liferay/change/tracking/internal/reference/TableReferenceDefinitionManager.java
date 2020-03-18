@@ -119,7 +119,7 @@ public class TableReferenceDefinitionManager {
 
 			if (primaryKeyColumn == null) {
 				_log.error(
-					"No primaryKeyColumn found for " +
+					"No primary key column found for " +
 						tableReferenceDefinition);
 
 				return null;
