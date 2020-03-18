@@ -135,8 +135,6 @@ public class RatingsTag extends IncludeTag {
 			httpServletRequest.setAttribute(
 				"liferay-ratings:ratings:classPK", String.valueOf(_classPK));
 
-			boolean inTrash = _isInTrash();
-
 			int positiveVotes = (int)Math.round(_getTotalScore());
 
 			RatingsStats ratingsStats = _getRatingsStats();
@@ -155,7 +153,7 @@ public class RatingsTag extends IncludeTag {
 				).put(
 					"classPK", _classPK
 				).put(
-					"enabled", _isEnabled(themeDisplay, inTrash)
+					"enabled", _isEnabled(themeDisplay, _inTrash)
 				).put(
 					"initialLiked", _isThumbUp(_getUserScore(ratingsEntry))
 				).put(
@@ -164,7 +162,7 @@ public class RatingsTag extends IncludeTag {
 				).put(
 					"initialPositiveVotes", positiveVotes
 				).put(
-					"inTrash", inTrash
+					"inTrash", _inTrash
 				).put(
 					"positiveVotes", positiveVotes
 				).put(
@@ -178,7 +176,7 @@ public class RatingsTag extends IncludeTag {
 				).build());
 
 			httpServletRequest.setAttribute(
-				"liferay-ratings:ratings:inTrash", inTrash);
+				"liferay-ratings:ratings:inTrash", _inTrash);
 			httpServletRequest.setAttribute(
 				"liferay-ratings:ratings:ratingsEntry", ratingsEntry);
 			httpServletRequest.setAttribute(
