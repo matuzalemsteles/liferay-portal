@@ -52,11 +52,11 @@ import com.liferay.portal.kernel.portlet.LiferayRenderRequest;
 import com.liferay.portal.kernel.portlet.LiferayRenderResponse;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
-import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactory;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.servlet.taglib.ui.AssetAddonEntry;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -739,22 +739,16 @@ public class JournalContentDisplayContext {
 		try {
 			JournalArticle article = getArticle();
 
-			PortletURL portletURL = PortletURLFactoryUtil.create(
-				_portletRequest, JournalPortletKeys.JOURNAL,
+			Group group = GroupLocalServiceUtil.fetchGroup(
+				article.getGroupId());
+
+			PortletURL portletURL = PortalUtil.getControlPanelPortletURL(
+				_portletRequest, group, JournalPortletKeys.JOURNAL, 0, 0,
 				PortletRequest.RENDER_PHASE);
 
 			portletURL.setParameter("mvcPath", "/view_article_history.jsp");
-
-			PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
-
-			portletURL.setParameter(
-				"referringPortletResource", portletDisplay.getId());
-
-			portletURL.setParameter(
-				"groupId", String.valueOf(article.getGroupId()));
 			portletURL.setParameter("articleId", article.getArticleId());
-			portletURL.setParameter("showHeader", Boolean.TRUE.toString());
-			portletURL.setWindowState(LiferayWindowState.POP_UP);
+			portletURL.setParameter("backURL", _themeDisplay.getURLCurrent());
 
 			return portletURL.toString();
 		}

@@ -93,7 +93,6 @@ JournalArticle article = journalContentDisplayContext.getArticle();
 				id="basicViewHistoryIcon"
 				message="view-history"
 				url="<%= journalContentDisplayContext.getURLViewHistory() %>"
-				useDialog="<%= true %>"
 			/>
 		</c:if>
 	</liferay-ui:icon-menu>
