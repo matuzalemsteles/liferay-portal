@@ -148,10 +148,6 @@ public class RatingsTag extends IncludeTag {
 			RatingsEntry ratingsEntry = _getRatingsEntry(
 				ratingsStats, themeDisplay);
 
-			double userScore = _getUserScore(ratingsEntry);
-
-			String url = _getURL(themeDisplay);
-
 			httpServletRequest.setAttribute(
 				"liferay-ratings:ratings:data",
 				HashMapBuilder.<String, Object>put(
@@ -161,7 +157,7 @@ public class RatingsTag extends IncludeTag {
 				).put(
 					"enabled", _isEnabled(themeDisplay, inTrash)
 				).put(
-					"initialLiked", _isThumbUp(userScore)
+					"initialLiked", _isThumbUp(_getUserScore(ratingsEntry))
 				).put(
 					"initialNegativeVotes",
 					_getTotalEntries(ratingsStats) - positiveVotes
@@ -174,11 +170,11 @@ public class RatingsTag extends IncludeTag {
 				).put(
 					"signedIn", themeDisplay.isSignedIn()
 				).put(
-					"thumbDown", _isThumbDown(userScore)
+					"thumbDown", _isThumbDown(_getUserScore(ratingsEntry))
 				).put(
-					"thumbUp", _isThumbUp(userScore)
+					"thumbUp", _isThumbUp(_getUserScore(ratingsEntry))
 				).put(
-					"url", url
+					"url", _getURL(themeDisplay)
 				).build());
 
 			httpServletRequest.setAttribute(
@@ -189,7 +185,8 @@ public class RatingsTag extends IncludeTag {
 				"liferay-ratings:ratings:ratingsStats", ratingsStats);
 			httpServletRequest.setAttribute(
 				"liferay-ratings:ratings:type", _getType(httpServletRequest));
-			httpServletRequest.setAttribute("liferay-ratings:ratings:url", url);
+			httpServletRequest.setAttribute(
+				"liferay-ratings:ratings:url", _getURL(themeDisplay));
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
