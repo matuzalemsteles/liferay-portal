@@ -125,13 +125,13 @@ public class DBPartitionUtil {
 			dataSource);
 
 		if (db.getDBType() != DBType.MYSQL) {
-			throw new Error("Database Partition requires MySQL");
+			throw new Error("Database partition requires MySQL");
 		}
 
 		if (Validator.isNull(_DATABASE_PARTITION_INSTANCE_ID)) {
 			throw new Error(
-				"Database Partition requires setting the property " +
-					"database.partition.instance.id");
+				"Database partition requires setting the property " +
+					"\"database.partition.instance.id\"");
 		}
 
 		try (Connection connection = dataSource.getConnection()) {
@@ -196,10 +196,10 @@ public class DBPartitionUtil {
 			if ((companyId == CompanyConstants.SYSTEM) ||
 				(companyId == _defaultCompanyId)) {
 
-				statement.execute("USE " + _defaultSchemaName);
+				statement.execute("use " + _defaultSchemaName);
 			}
 			else {
-				statement.execute("USE " + _getSchemaName(companyId));
+				statement.execute("use " + _getSchemaName(companyId));
 			}
 		}
 	}
