@@ -73,9 +73,6 @@ public class DBPartitionUtilTest {
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		_connection = DataAccess.getConnection();
-
-		_defaultSchemaName = _connection.getCatalog();
-
 		_currentDatabasePartitionEnabledValue =
 			ReflectionTestUtil.getAndSetFieldValue(
 				DBPartitionUtil.class, "_DATABASE_PARTITION_ENABLED", true);
@@ -83,18 +80,18 @@ public class DBPartitionUtilTest {
 			ReflectionTestUtil.getAndSetFieldValue(
 				DBPartitionUtil.class, "_DATABASE_PARTITION_INSTANCE_ID",
 				_DB_PARTITION_INSTANCE_ID);
-
 		_currentDataSource = ReflectionTestUtil.getFieldValue(
 			DBInitUtil.class, "_dataSource");
+
+		_defaultSchemaName = _connection.getCatalog();
+
+		DBPartitionUtil.setDefaultCompanyId(_portal.getDefaultCompanyId());
 
 		DataSource dbPartitionDataSource = DBPartitionUtil.wrapDataSource(
 			_currentDataSource);
 
-		DBPartitionUtil.setDefaultCompanyId(_portal.getDefaultCompanyId());
-
 		ReflectionTestUtil.setFieldValue(
 			DBInitUtil.class, "_dataSource", dbPartitionDataSource);
-
 		ReflectionTestUtil.setFieldValue(
 			InfrastructureUtil.class, "_dataSource", dbPartitionDataSource);
 
