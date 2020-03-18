@@ -213,7 +213,8 @@ public class DBPartitionUtilTest {
 
 	private static final long _COMPANY_ID = 1L;
 
-	private static final String _DB_PARTITION_INSTANCE_ID = "dbPartitionTest";
+	private static final String _DB_PARTITION_INSTANCE_ID =
+		"dbPartitionUtilTest";
 
 	private static Connection _connection;
 	private static boolean _currentDatabasePartitionEnabledValue;
