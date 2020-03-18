@@ -109,17 +109,14 @@ public class DBPartitionUtilTest {
 
 		ReflectionTestUtil.setFieldValue(
 			DBInitUtil.class, "_dataSource", _currentDataSource);
-
-		ReflectionTestUtil.setFieldValue(
-			InfrastructureUtil.class, "_dataSource", _currentDataSource);
-
 		ReflectionTestUtil.setFieldValue(
 			DBPartitionUtil.class, "_DATABASE_PARTITION_ENABLED",
 			_currentDatabasePartitionEnabledValue);
-
 		ReflectionTestUtil.setFieldValue(
 			DBPartitionUtil.class, "_DATABASE_PARTITION_INSTANCE_ID",
 			_currentDatabasePartitionInstanceIdValue);
+		ReflectionTestUtil.setFieldValue(
+			InfrastructureUtil.class, "_dataSource", _currentDataSource);
 	}
 
 	@After
