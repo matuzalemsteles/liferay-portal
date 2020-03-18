@@ -23,10 +23,10 @@ function copy_remove_dir {
 	DEST_DIR=$2
 
 	if [ -n "$(ls -A ${SRC_DIR}/* 2> /dev/null)" ]; then
-		echo "[LIFERAY] Copying $SRC_DIR $DEST_DIR files:"
+		echo "[LIFERAY] Copying ${SRC_DIR} ${DEST_DIR} files:"
 		echo ""
 
-		tree --noreport "$SRC_DIR"
+		tree --noreport "${SRC_DIR}"
 
 		echo ""
 		echo "[LIFERAY] ... into ${LIFERAY_MOUNT_DIR}/${DEST_DIR}"
