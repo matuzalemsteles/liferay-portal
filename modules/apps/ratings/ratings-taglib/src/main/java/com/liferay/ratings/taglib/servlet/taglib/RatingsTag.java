@@ -135,8 +135,6 @@ public class RatingsTag extends IncludeTag {
 			httpServletRequest.setAttribute(
 				"liferay-ratings:ratings:classPK", String.valueOf(_classPK));
 
-			int positiveVotes = (int)Math.round(_getTotalScore());
-
 			RatingsStats ratingsStats = _getRatingsStats();
 
 			ThemeDisplay themeDisplay =
@@ -145,6 +143,8 @@ public class RatingsTag extends IncludeTag {
 
 			RatingsEntry ratingsEntry = _getRatingsEntry(
 				ratingsStats, themeDisplay);
+
+			int positiveVotes = (int)Math.round(_getTotalScore());
 
 			httpServletRequest.setAttribute(
 				"liferay-ratings:ratings:data",
