@@ -1825,7 +1825,8 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 		defaultUser.setAgreedToTermsOfUse(true);
 		defaultUser.setStatus(WorkflowConstants.STATUS_APPROVED);
 
-		// Invoke updateImpl so that we do not trigger the listeners
+		// Invoke updateImpl so that we do not trigger model listeners. See
+		// LPS-108239.
 
 		defaultUser = userPersistence.updateImpl(defaultUser);
 
