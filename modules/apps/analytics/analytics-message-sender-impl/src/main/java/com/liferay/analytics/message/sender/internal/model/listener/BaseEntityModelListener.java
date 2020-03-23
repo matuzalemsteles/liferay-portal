@@ -16,11 +16,11 @@ package com.liferay.analytics.message.sender.internal.model.listener;
 
 import com.liferay.analytics.message.sender.model.AnalyticsMessage;
 import com.liferay.analytics.message.sender.model.EntityModelListener;
+import com.liferay.analytics.message.sender.util.AnalyticsExpandoBridgeUtil;
 import com.liferay.analytics.message.storage.service.AnalyticsMessageLocalService;
 import com.liferay.analytics.settings.configuration.AnalyticsConfiguration;
 import com.liferay.analytics.settings.configuration.AnalyticsConfigurationTracker;
 import com.liferay.analytics.settings.security.constants.AnalyticsSecurityConstants;
-import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.model.ExpandoRow;
 import com.liferay.expando.kernel.model.ExpandoTable;
 import com.liferay.expando.kernel.model.ExpandoTableConstants;
@@ -334,9 +334,10 @@ public abstract class BaseEntityModelListener<T extends BaseModel<T>>
 
 		for (String includeAttributeName : includeAttributeNames) {
 			if (includeAttributeName.equals("expando")) {
-				ExpandoBridge expandoBridge = baseModel.getExpandoBridge();
-
-				jsonObject.put("expando", expandoBridge.getAttributes(false));
+				jsonObject.put(
+					"expando",
+					AnalyticsExpandoBridgeUtil.getAttributes(
+						baseModel.getExpandoBridge()));
 
 				continue;
 			}
