@@ -19,7 +19,6 @@ import com.liferay.document.library.kernel.model.DLFileEntryMetadata;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portlet.documentlibrary.constants.DLConstants;
@@ -56,13 +55,6 @@ public class DLDataDefinitionContentType implements DataDefinitionContentType {
 			PermissionChecker permissionChecker, long companyId, long groupId,
 			String resourceName, long primKey, long userId, String actionId)
 		throws PortalException {
-
-		if (_portletResourcePermission.contains(
-				PermissionThreadLocal.getPermissionChecker(), groupId,
-				ActionKeys.MANAGE)) {
-
-			return true;
-		}
 
 		if (permissionChecker.hasOwnerPermission(
 				companyId, resourceName, primKey, userId, actionId)) {
