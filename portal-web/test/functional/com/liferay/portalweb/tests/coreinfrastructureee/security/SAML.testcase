@@ -130,6 +130,7 @@ definition {
 		AssertConsoleTextPresent(value1 = "TestSiteRole");
 	}
 
+	@ignore = "true"
 	@priority = "4"
 	test AssertKeepAliveToKeepMySAMLSessionAlive {
 		property app.server.bundles.size = "2";
@@ -1008,6 +1009,7 @@ definition {
 		User.viewLoggedOutPG();
 	}
 
+	@ignore = "true"
 	@priority = "4"
 	test ViewSingleLogoutAndForceAuthWithMultipleSPs {
 		property app.server.bundles.size = "2";
