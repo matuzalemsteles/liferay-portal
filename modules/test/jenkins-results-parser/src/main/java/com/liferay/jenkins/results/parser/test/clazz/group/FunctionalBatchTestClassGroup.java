@@ -64,6 +64,13 @@ public class FunctionalBatchTestClassGroup extends BatchTestClassGroup {
 		_setRelevantTestBatchRunPropertyQuery();
 	}
 
+	private String _getDefaultTestBatchRunPropertyGlobalQuery(
+		String testSuiteName) {
+
+		return getFirstPropertyValue(
+			"test.batch.run.property.global.query", batchName, testSuiteName);
+	}
+
 	private String _getDefaultTestBatchRunPropertyQuery(String testSuiteName) {
 		return getFirstPropertyValue(
 			"test.batch.run.property.query", batchName, testSuiteName);
@@ -172,6 +179,16 @@ public class FunctionalBatchTestClassGroup extends BatchTestClassGroup {
 		}
 
 		_relevantTestBatchRunPropertyQuery = sb.toString();
+
+		String defaultGlobalQuery = _getDefaultTestBatchRunPropertyGlobalQuery(
+			testSuiteName);
+
+		if ((defaultGlobalQuery != null) && !defaultGlobalQuery.isEmpty()) {
+			_relevantTestBatchRunPropertyQuery =
+				JenkinsResultsParserUtil.combine(
+					"(", defaultGlobalQuery, ") AND (",
+					_relevantTestBatchRunPropertyQuery, ")");
+		}
 	}
 
 	private String _relevantTestBatchRunPropertyQuery;
