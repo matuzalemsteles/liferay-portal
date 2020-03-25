@@ -44,7 +44,6 @@ import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.InputFiles;
 import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.OutputFile;
-import org.gradle.api.tasks.OutputFiles;
 import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.TaskAction;
@@ -189,19 +188,6 @@ public class BaselineTask extends DefaultTask implements VerificationTask {
 	@PathSensitive(PathSensitivity.RELATIVE)
 	public File getNewJarFile() {
 		return GradleUtil.toFile(getProject(), _newJarFile);
-	}
-
-	@Optional
-	@OutputFiles
-	public FileCollection getOutputFiles() {
-		Project project = getProject();
-
-		Map<String, Object> args = new HashMap<>();
-
-		args.put("dir", getSourceDir());
-		args.put("includes", Collections.singleton("**/packageinfo"));
-
-		return project.fileTree(args);
 	}
 
 	@Optional
