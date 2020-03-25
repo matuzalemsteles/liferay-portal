@@ -12,7 +12,7 @@
  *
  */
 
-package com.liferay.analytics.reports.web.internal.data.time;
+package com.liferay.analytics.reports.web.internal.model;
 
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 

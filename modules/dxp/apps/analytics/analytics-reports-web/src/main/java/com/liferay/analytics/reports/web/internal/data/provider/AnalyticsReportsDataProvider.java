@@ -14,7 +14,7 @@
 
 package com.liferay.analytics.reports.web.internal.data.provider;
 
-import com.liferay.analytics.reports.web.internal.data.time.TimeRange;
+import com.liferay.analytics.reports.web.internal.model.TimeRange;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
