@@ -166,9 +166,17 @@ const FieldBaseProxy = ({dispatch, name, store, ...otherProps}) => (
 		{...otherProps}
 		editingLanguageId={store.editingLanguageId}
 		name={name}
-		onClick={event =>
-			dispatch('fieldClicked', {fieldName: name, originalEvent: event})
-		}
+		onClick={event => {
+			if (event.nativeEvent.stoppedImmediate) {
+				return;
+			}
+
+			event.nativeEvent.stopImmediatePropagation();
+			dispatch('fieldClicked', {
+				fieldName: event.currentTarget.dataset.fieldName,
+				originalEvent: event,
+			});
+		}}
 		onRemoveButton={() => dispatch('fieldRemoved', name)}
 		onRepeatButton={() => dispatch('fieldRepeated', name)}
 	/>
