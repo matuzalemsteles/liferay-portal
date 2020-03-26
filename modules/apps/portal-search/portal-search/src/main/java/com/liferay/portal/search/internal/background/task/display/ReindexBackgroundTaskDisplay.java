@@ -34,7 +34,7 @@ public class ReindexBackgroundTaskDisplay extends BaseBackgroundTaskDisplay {
 	@Override
 	public int getPercentage() {
 		return GetterUtil.getInteger(
-			getBackgroundTaskStatusAttributeLong("percentage"),
+			getBackgroundTaskStatusAttributeString("percentage"),
 			PERCENTAGE_NONE);
 	}
 
