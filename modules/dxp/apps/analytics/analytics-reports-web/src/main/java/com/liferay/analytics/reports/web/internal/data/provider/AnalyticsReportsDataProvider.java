@@ -14,7 +14,15 @@
 
 package com.liferay.analytics.reports.web.internal.data.provider;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+
+import com.liferay.analytics.reports.web.internal.client.AsahFaroBackendClient;
 import com.liferay.analytics.reports.web.internal.model.TimeRange;
+import com.liferay.analytics.reports.web.internal.model.TrafficSource;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -25,12 +33,28 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author David Arques
  */
 public class AnalyticsReportsDataProvider {
+
+	public AnalyticsReportsDataProvider() {
+		this(new AsahFaroBackendClient());
+	}
+
+	public AnalyticsReportsDataProvider(
+		AsahFaroBackendClient asahFaroBackendClient) {
+
+		if (asahFaroBackendClient == null) {
+			throw new IllegalArgumentException(
+				"Asah Faro backend client is null");
+		}
+
+		_asahFaroBackendClient = asahFaroBackendClient;
+	}
 
 	public JSONObject getHistoricalReadsJSONObject(
 			long plid, TimeRange timeRange)
@@ -52,6 +76,26 @@ public class AnalyticsReportsDataProvider {
 
 	public Long getTotalViews(long plid) {
 		return 187427L;
+	}
+
+	public List<TrafficSource> getTrafficSources(long companyId, String url)
+		throws PortalException {
+
+		try {
+			String response = _asahFaroBackendClient.doGet(
+				companyId, "api/seo/1.0/traffic-sources?url=" + url);
+
+			TypeFactory typeFactory = _objectMapper.getTypeFactory();
+
+			return _objectMapper.readValue(
+				response,
+				typeFactory.constructCollectionType(
+					List.class, TrafficSource.class));
+		}
+		catch (Exception exception) {
+			throw new PortalException(
+				"Unable to get traffic sources", exception);
+		}
 	}
 
 	private JSONObject _getHistoricalJSONObject(
@@ -86,5 +130,16 @@ public class AnalyticsReportsDataProvider {
 
 		return threadLocalRandom.nextInt(0, 200 + 1);
 	}
+
+	private static final ObjectMapper _objectMapper = new ObjectMapper() {
+		{
+			enable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY);
+			enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
+			configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+		}
+	};
+
+	private final AsahFaroBackendClient _asahFaroBackendClient;
 
 }
