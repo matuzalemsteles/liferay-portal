@@ -170,7 +170,9 @@ if (accountEntryDisplay != null) {
 					);
 
 					searchContainer.deleteRow(1, searchContainer.getData());
+
 					searchContainer.addRow(rowColumns, event.entityid);
+
 					searchContainer.updateDataStore(event.entityid);
 				}
 			);
