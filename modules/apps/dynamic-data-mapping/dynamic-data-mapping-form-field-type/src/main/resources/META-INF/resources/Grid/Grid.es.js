@@ -77,13 +77,13 @@ const Grid = ({
 	onBlur = () => {},
 	onChange = () => {},
 	onFocus = () => {},
-	readOnly = false,
+	disabled,
 	rows = [{label: 'row', value: 'jehf'}],
 	value,
 	...otherProps
 }) => (
 	<div className="table-responsive" {...otherProps}>
-		{!readOnly &&
+		{!disabled &&
 			rows.map((row, rowIndex) => {
 				const inputValue = value[row.value]
 					? `${row.value};${value[row.value]}`
@@ -142,6 +142,7 @@ const GridProxy = connectStore(
 			<FieldBaseProxy {...otherProps}>
 				<Grid
 					columns={columns}
+					disabled={readOnly}
 					name={name}
 					onBlur={event =>
 						emit('fieldBlurred', event, event.target.value)
@@ -161,7 +162,6 @@ const GridProxy = connectStore(
 					onFocus={event =>
 						emit('fieldFocused', event, event.target.value)
 					}
-					readOnly={readOnly}
 					rows={rows}
 					value={state}
 				/>
