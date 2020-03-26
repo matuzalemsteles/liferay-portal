@@ -1049,9 +1049,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 					assertValid(put${schemaName});
 
 					${schemaName} get${schemaName} = ${schemaVarName}Resource.${javaMethodSignature.methodName?replace("put", "get")}(
-
 						<#list javaMethodSignature.pathJavaMethodParameters as javaMethodParameter>
-
 							<#if freeMarkerTool.isPathParameter(javaMethodParameter, javaMethodSignature.operation) && stringUtil.equals(javaMethodParameter.parameterName, schemaVarName + "Id")>
 								put${schemaName}.getId()
 							<#elseif freeMarkerTool.isPathParameter(javaMethodParameter, javaMethodSignature.operation) && properties?keys?seq_contains(javaMethodParameter.parameterName)>
