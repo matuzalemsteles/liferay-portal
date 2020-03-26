@@ -27,12 +27,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.osgi.service.component.annotations.Component;
-
 /**
  * @author David Arques
  */
-@Component(immediate = true, service = AnalyticsReportsDataProvider.class)
 public class AnalyticsReportsDataProvider {
 
 	public JSONObject getHistoricalReadsJSONObject(

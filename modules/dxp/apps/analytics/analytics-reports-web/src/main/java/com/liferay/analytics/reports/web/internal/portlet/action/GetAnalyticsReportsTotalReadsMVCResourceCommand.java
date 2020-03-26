@@ -27,7 +27,6 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author David Arques
@@ -58,7 +57,7 @@ public class GetAnalyticsReportsTotalReadsMVCResourceCommand
 			resourceRequest, resourceResponse, jsonObject);
 	}
 
-	@Reference
-	private AnalyticsReportsDataProvider _analyticsReportsDataProvider;
+	private static final AnalyticsReportsDataProvider
+		_analyticsReportsDataProvider = new AnalyticsReportsDataProvider();
 
 }

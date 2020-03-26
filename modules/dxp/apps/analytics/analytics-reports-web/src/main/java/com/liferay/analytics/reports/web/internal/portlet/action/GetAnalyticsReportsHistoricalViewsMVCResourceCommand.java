@@ -33,7 +33,6 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author David Arques
@@ -92,7 +91,7 @@ public class GetAnalyticsReportsHistoricalViewsMVCResourceCommand
 	private static final Log _log = LogFactoryUtil.getLog(
 		GetAnalyticsReportsHistoricalViewsMVCResourceCommand.class);
 
-	@Reference
-	private AnalyticsReportsDataProvider _analyticsReportsDataProvider;
+	private static final AnalyticsReportsDataProvider
+		_analyticsReportsDataProvider = new AnalyticsReportsDataProvider();
 
 }
