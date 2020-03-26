@@ -347,12 +347,12 @@ public class MFAEmailOTPChecker {
 			return true;
 		}
 
-		long mfaEmailOTPValidatedAtTime = (long)httpSession.getAttribute(
-			MFAEmailOTPWebKeys.MFA_EMAIL_OTP_VALIDATED_AT_TIME);
-
 		long time =
 			(mfaEmailOTPConfiguration.validationExpirationTime() *
-				Time.SECOND) + mfaEmailOTPValidatedAtTime;
+				Time.SECOND);
+
+		time += (long)httpSession.getAttribute(
+			MFAEmailOTPWebKeys.MFA_EMAIL_OTP_VALIDATED_AT_TIME);
 
 		if (time > System.currentTimeMillis()) {
 			_routeAuditMessage(
