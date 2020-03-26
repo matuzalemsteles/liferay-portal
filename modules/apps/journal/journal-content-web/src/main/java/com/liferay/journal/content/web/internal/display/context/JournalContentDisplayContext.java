@@ -747,8 +747,8 @@ public class JournalContentDisplayContext {
 				PortletRequest.RENDER_PHASE);
 
 			portletURL.setParameter("mvcPath", "/view_article_history.jsp");
-			portletURL.setParameter("articleId", article.getArticleId());
 			portletURL.setParameter("backURL", _themeDisplay.getURLCurrent());
+			portletURL.setParameter("articleId", article.getArticleId());
 
 			return portletURL.toString();
 		}
