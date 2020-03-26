@@ -91,8 +91,7 @@ public class DataDefinitionContentTypeTracker {
 		_dataDefinitionContentTypesByContentType.remove(contentType);
 	}
 
-	private final Map<String, Long> _classNameIds =
-		new TreeMap<>();
+	private final Map<String, Long> _classNameIds = new TreeMap<>();
 	private final Map<Long, DataDefinitionContentType>
 		_dataDefinitionContentTypesByClassNameId = new TreeMap<>();
 	private final Map<String, DataDefinitionContentType>
