@@ -142,12 +142,20 @@ public abstract class BaseBackgroundTaskDisplay
 	}
 
 	protected long getBackgroundTaskStatusAttributeLong(String attributeKey) {
+		if (!hasBackgroundTaskStatus()) {
+			return 0;
+		}
+
 		return GetterUtil.getLong(
 			backgroundTaskStatus.getAttribute(attributeKey));
 	}
 
 	protected String getBackgroundTaskStatusAttributeString(
 		String attributeKey) {
+
+		if (!hasBackgroundTaskStatus()) {
+			return StringPool.BLANK;
+		}
 
 		return GetterUtil.getString(
 			backgroundTaskStatus.getAttribute(attributeKey));
