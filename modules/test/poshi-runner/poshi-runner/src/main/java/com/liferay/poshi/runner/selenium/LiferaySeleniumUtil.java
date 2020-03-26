@@ -504,10 +504,8 @@ public class LiferaySeleniumUtil {
 
 			if (consoleLogSize > _BYTES_MAX_SIZE_CONSOLE_LOG) {
 				String largeConsoleLogSizeMessage =
-					"Unable to get console log file content. Console log has " +
-						"exceeded " + _BYTES_MAX_SIZE_CONSOLE_LOG + " bytes, " +
-							"please clean old or unused log file(s): " +
-								PropsValues.TEST_CONSOLE_LOG_FILE_NAME;
+					"Console log " + PropsValues.TEST_CONSOLE_LOG_FILE_NAME +
+						" exceeded " + _BYTES_MAX_SIZE_CONSOLE_LOG + " bytes";
 
 				System.out.println(largeConsoleLogSizeMessage);
 
