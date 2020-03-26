@@ -91,7 +91,6 @@ public class DataDefinitionContentTypeTracker {
 			_classNameIds.get(contentType));
 
 		_classNameIds.remove(contentType);
-
 		_dataDefinitionContentTypesByContentType.remove(contentType);
 	}
 
