@@ -63,13 +63,15 @@ public class DataDefinitionContentTypeTracker {
 			return;
 		}
 
-		long classNameId = dataDefinitionContentType.getClassNameId();
 		String contentType = MapUtil.getString(properties, "content.type");
 
-		_classNameIds.put(contentType, classNameId);
+		_classNameIds.put(
+			contentType, dataDefinitionContentType.getClassNameId());
 
 		_dataDefinitionContentTypesByClassNameId.put(
-			classNameId, dataDefinitionContentType);
+			dataDefinitionContentType.getClassNameId(),
+			dataDefinitionContentType);
+
 		_dataDefinitionContentTypesByContentType.put(
 			contentType, dataDefinitionContentType);
 	}
