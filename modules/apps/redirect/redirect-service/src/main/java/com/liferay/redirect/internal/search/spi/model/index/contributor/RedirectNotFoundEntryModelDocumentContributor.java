@@ -36,8 +36,8 @@ public class RedirectNotFoundEntryModelDocumentContributor
 	public void contribute(
 		Document document, RedirectNotFoundEntry redirectNotFoundEntry) {
 
-		document.addNumber("hits", redirectNotFoundEntry.getHits());
 		document.addText(Field.URL, redirectNotFoundEntry.getUrl());
+		document.addNumber("hits", redirectNotFoundEntry.getHits());
 	}
 
 }
