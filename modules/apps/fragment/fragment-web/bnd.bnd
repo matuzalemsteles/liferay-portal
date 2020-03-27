@@ -1,6 +1,6 @@
 Bundle-Name: Liferay Fragment Web
 Bundle-SymbolicName: com.liferay.fragment.web
-Bundle-Version: 3.0.16
+Bundle-Version: 3.0.17
 Provide-Capability:\
 	soy;\
 		type="fragment";\
