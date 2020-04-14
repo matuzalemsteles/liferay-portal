@@ -18,7 +18,7 @@ import {ClayCheckbox} from '@clayui/form';
 import classNames from 'classnames';
 import React, {useState} from 'react';
 
-import {FieldBaseProxy} from '../FieldBase/ReactFieldBase.es';
+import {FieldBaseProxy} from '../FieldBase/FieldBase.es';
 import getConnectedReactComponentAdapter from '../util/ReactComponentAdapter.es';
 import {connectStore} from '../util/connectStore.es';
 import {setJSONArrayValue} from '../util/setters.es';

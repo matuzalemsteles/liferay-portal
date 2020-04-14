@@ -36,7 +36,6 @@
 		"testPathIgnorePatterns": [
 			"Checkbox",
 			"DatePicker",
-			"FieldBase",
 			"Tooltip",
 			"withContextMock"
 		]

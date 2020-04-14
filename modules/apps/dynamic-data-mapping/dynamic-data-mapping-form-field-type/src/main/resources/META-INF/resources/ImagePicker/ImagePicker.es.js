@@ -21,7 +21,7 @@ import ClayModal, {useModal} from '@clayui/modal';
 import {ItemSelectorDialog, cancelDebounce, debounce} from 'frontend-js-web';
 import React, {useEffect, useRef, useState} from 'react';
 
-import {FieldBaseProxy} from '../FieldBase/ReactFieldBase.es';
+import {FieldBaseProxy} from '../FieldBase/FieldBase.es';
 import getConnectedReactComponentAdapter from '../util/ReactComponentAdapter.es';
 import {connectStore} from '../util/connectStore.es';
 import templates from './ImagePickerAdapter.soy';

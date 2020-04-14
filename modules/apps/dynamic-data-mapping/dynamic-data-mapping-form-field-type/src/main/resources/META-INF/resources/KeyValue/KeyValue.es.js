@@ -17,7 +17,7 @@ import './KeyValueRegister.soy';
 import {normalizeFieldName} from 'dynamic-data-mapping-form-renderer';
 import React, {useRef} from 'react';
 
-import {FieldBaseProxy} from '../FieldBase/ReactFieldBase.es';
+import {FieldBaseProxy} from '../FieldBase/FieldBase.es';
 import {Main as Text} from '../Text/Text.es';
 import {useSyncValue} from '../hooks/useSyncValue.es';
 import getConnectedReactComponentAdapter from '../util/ReactComponentAdapter.es';

@@ -16,7 +16,7 @@ import './ParagraphRegister.soy';
 
 import React from 'react';
 
-import {FieldBaseProxy} from '../FieldBase/ReactFieldBase.es';
+import {FieldBaseProxy} from '../FieldBase/FieldBase.es';
 import getConnectedReactComponentAdapter from '../util/ReactComponentAdapter.es';
 import {connectStore} from '../util/connectStore.es';
 import templates from './ParagraphAdapter.soy';

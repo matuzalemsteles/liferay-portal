@@ -12,82 +12,80 @@
  * details.
  */
 
+import {cleanup, render} from '@testing-library/react';
+import React from 'react';
+
 import FieldBase from '../../../src/main/resources/META-INF/resources/FieldBase/FieldBase.es';
 
-let component;
 const spritemap = 'icons.svg';
 
+const connectMock = Base => {
+	const dispatch = jest.fn();
+	const store = {
+		editingLanguageId: 'en_US',
+	};
+
+	return props => <Base {...props} dispatch={dispatch} store={store} />;
+};
+
+const FieldBaseWithMock = connectMock(FieldBase);
+
 describe('FieldBase', () => {
-	afterEach(() => {
-		if (component) {
-			component.dispose();
-		}
-	});
+	afterEach(cleanup);
 
 	it('renders the default markup', () => {
-		component = new FieldBase({
-			spritemap,
-		});
+		const {container} = render(<FieldBaseWithMock spritemap={spritemap} />);
 
-		expect(component).toMatchSnapshot();
+		expect(container).toMatchSnapshot();
 	});
 
 	it('renders the FieldBase with required', () => {
-		component = new FieldBase({
-			required: true,
-			spritemap,
-		});
+		const {container} = render(
+			<FieldBaseWithMock required spritemap={spritemap} />
+		);
 
-		expect(component).toMatchSnapshot();
-	});
-
-	it('renders the FieldBase with id', () => {
-		component = new FieldBase({
-			id: 'Id',
-			spritemap,
-		});
-
-		expect(component).toMatchSnapshot();
+		expect(container.querySelector('.reference-mark')).toBeTruthy();
 	});
 
 	it('renders the FieldBase with help text', () => {
-		component = new FieldBase({
-			spritemap,
-			tip: 'Type something!',
-		});
+		const {container} = render(
+			<FieldBaseWithMock spritemap={spritemap} tip="Type something!" />
+		);
 
-		expect(component).toMatchSnapshot();
+		expect(container.querySelector('.form-text').textContent).toBe(
+			'Type something!'
+		);
 	});
 
 	it('renders the FieldBase with label', () => {
-		component = new FieldBase({
-			label: 'Text',
-			spritemap,
-		});
+		const {container} = render(
+			<FieldBaseWithMock label="Text" spritemap={spritemap} />
+		);
 
-		expect(component).toMatchSnapshot();
+		expect(container.querySelector('.ddm-label').textContent).toBe('Text');
 	});
 
 	it('does not render the label if showLabel is false', () => {
-		component = new FieldBase({
-			label: 'Text',
-			showLabel: false,
-			spritemap,
-		});
+		const {container} = render(
+			<FieldBaseWithMock
+				label="Text"
+				showLabel={false}
+				spritemap={spritemap}
+			/>
+		);
 
-		expect(component).toMatchSnapshot();
+		expect(container.querySelector('.ddm-label')).toBeFalsy();
 	});
 
-	it('renders the FieldBase with contentRenderer', () => {
-		component = new FieldBase({
-			contentRenderer: `
-                <div>
-                    <h1>Foo bar</h1>
-                </div>
-            `,
-			spritemap,
-		});
+	it('renders the FieldBase with children', () => {
+		const {container} = render(
+			<FieldBaseWithMock spritemap={spritemap}>
+				<div>
+					<h1>Foo bar</h1>
+				</div>
+			</FieldBaseWithMock>
+		);
 
-		expect(component).toMatchSnapshot();
+		expect(container).toMatchSnapshot();
 	});
 });

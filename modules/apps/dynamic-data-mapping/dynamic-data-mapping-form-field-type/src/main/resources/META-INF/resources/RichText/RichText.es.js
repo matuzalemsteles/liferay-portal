@@ -17,7 +17,7 @@ import './RichTextRegister.soy';
 import {Editor} from 'frontend-editor-ckeditor-web';
 import React from 'react';
 
-import {FieldBaseProxy} from '../FieldBase/ReactFieldBase.es';
+import {FieldBaseProxy} from '../FieldBase/FieldBase.es';
 import {useSyncValue} from '../hooks/useSyncValue.es';
 import getConnectedReactComponentAdapter from '../util/ReactComponentAdapter.es';
 import {connectStore} from '../util/connectStore.es';

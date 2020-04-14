@@ -12,8 +12,6 @@
  * details.
  */
 
-import '../FieldBase/FieldBase.es';
-
 import './DocumentLibraryRegister.soy';
 
 import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
@@ -27,7 +25,7 @@ import {
 } from 'frontend-js-web';
 import React, {useMemo, useState} from 'react';
 
-import {FieldBaseProxy} from '../FieldBase/ReactFieldBase.es';
+import {FieldBaseProxy} from '../FieldBase/FieldBase.es';
 import getConnectedReactComponentAdapter from '../util/ReactComponentAdapter.es';
 import {connectStore} from '../util/connectStore.es';
 import templates from './DocumentLibraryAdapter.soy';

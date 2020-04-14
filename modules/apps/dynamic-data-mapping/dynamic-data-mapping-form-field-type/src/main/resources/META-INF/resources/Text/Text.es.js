@@ -20,7 +20,7 @@ import {ClayInput} from '@clayui/form';
 import {normalizeFieldName} from 'dynamic-data-mapping-form-renderer';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 
-import {FieldBaseProxy} from '../FieldBase/ReactFieldBase.es';
+import {FieldBaseProxy} from '../FieldBase/FieldBase.es';
 import {useSyncValue} from '../hooks/useSyncValue.es';
 import getConnectedReactComponentAdapter from '../util/ReactComponentAdapter.es';
 import {connectStore} from '../util/connectStore.es';

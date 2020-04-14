@@ -17,7 +17,7 @@ import './CaptchaRegister.soy';
 import {globalEval} from 'metal-dom';
 import React, {useEffect, useMemo, useRef} from 'react';
 
-import {FieldBaseProxy} from '../FieldBase/ReactFieldBase.es';
+import {FieldBaseProxy} from '../FieldBase/FieldBase.es';
 import getConnectedReactComponentAdapter from '../util/ReactComponentAdapter.es';
 import {connectStore} from '../util/connectStore.es';
 import templates from './CaptchaAdapter.soy';

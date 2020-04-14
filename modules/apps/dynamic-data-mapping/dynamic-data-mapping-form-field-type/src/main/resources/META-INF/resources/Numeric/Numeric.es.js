@@ -19,7 +19,7 @@ import React, {useEffect, useRef} from 'react';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import vanillaTextMask from 'vanilla-text-mask';
 
-import {FieldBaseProxy} from '../FieldBase/ReactFieldBase.es';
+import {FieldBaseProxy} from '../FieldBase/FieldBase.es';
 import {useSyncValue} from '../hooks/useSyncValue.es';
 import getConnectedReactComponentAdapter from '../util/ReactComponentAdapter.es';
 import {connectStore} from '../util/connectStore.es';

@@ -22,7 +22,7 @@ import ClayLabel from '@clayui/label';
 import classNames from 'classnames';
 import React, {forwardRef, useState} from 'react';
 
-import {FieldBaseProxy} from '../FieldBase/ReactFieldBase.es';
+import {FieldBaseProxy} from '../FieldBase/FieldBase.es';
 import getConnectedReactComponentAdapter from '../util/ReactComponentAdapter.es';
 import {connectStore} from '../util/connectStore.es';
 import InputComponent from './InputComponent.es';

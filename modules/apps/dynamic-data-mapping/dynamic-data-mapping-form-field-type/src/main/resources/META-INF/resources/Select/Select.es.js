@@ -18,7 +18,7 @@ import ClayDropDown from '@clayui/drop-down';
 import {ClayCheckbox} from '@clayui/form';
 import React, {forwardRef, useMemo, useRef, useState} from 'react';
 
-import {FieldBaseProxy} from '../FieldBase/ReactFieldBase.es';
+import {FieldBaseProxy} from '../FieldBase/FieldBase.es';
 import {useSyncValue} from '../hooks/useSyncValue.es';
 import getConnectedReactComponentAdapter from '../util/ReactComponentAdapter.es';
 import {connectStore} from '../util/connectStore.es';
