@@ -38,7 +38,6 @@ import com.liferay.journal.util.comparator.FolderArticleDisplayDateComparator;
 import com.liferay.journal.util.comparator.FolderArticleModifiedDateComparator;
 import com.liferay.journal.util.comparator.FolderArticleTitleComparator;
 import com.liferay.journal.web.internal.asset.model.JournalArticleAssetRenderer;
-import com.liferay.journal.web.internal.configuration.JournalDDMEditorConfiguration;
 import com.liferay.journal.web.internal.configuration.JournalWebConfiguration;
 import com.liferay.journal.web.internal.constants.JournalWebConstants;
 import com.liferay.journal.web.internal.portlet.action.ActionUtil;
@@ -1113,10 +1112,6 @@ public class JournalDisplayContext {
 		return false;
 	}
 
-	public boolean useDataEngineEditor() {
-		return _journalDDMEditorConfiguration.useDataEngineEditor();
-	}
-
 	protected SearchContext buildSearchContext(
 		int start, int end, boolean showVersions) {
 
@@ -1195,9 +1190,6 @@ public class JournalDisplayContext {
 			assetDisplayPageFriendlyURLProvider;
 		_trashHelper = trashHelper;
 
-		_journalDDMEditorConfiguration =
-			(JournalDDMEditorConfiguration)_httpServletRequest.getAttribute(
-				JournalDDMEditorConfiguration.class.getName());
 		_journalWebConfiguration =
 			(JournalWebConfiguration)_httpServletRequest.getAttribute(
 				JournalWebConfiguration.class.getName());
@@ -1629,7 +1621,6 @@ public class JournalDisplayContext {
 	private JournalFolder _folder;
 	private Long _folderId;
 	private final HttpServletRequest _httpServletRequest;
-	private final JournalDDMEditorConfiguration _journalDDMEditorConfiguration;
 	private final JournalWebConfiguration _journalWebConfiguration;
 	private String _keywords;
 	private final LiferayPortletRequest _liferayPortletRequest;
