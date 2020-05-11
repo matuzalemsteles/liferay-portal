@@ -14,8 +14,25 @@
 
 import {normalizeFieldName} from 'dynamic-data-mapping-form-renderer';
 
+const findFieldByNameNested = (dataDefinitionFields, fieldName) =>
+	dataDefinitionFields.find(({name, nestedDataDefinitionFields}) => {
+		if (nestedDataDefinitionFields.length) {
+			findFieldByNameNested(nestedDataDefinitionFields, fieldName);
+		}
+
+		return name === fieldName;
+	});
+
 const findFieldByName = (dataDefinitionFields, fieldName) =>
-	dataDefinitionFields.find(({name}) => name === fieldName);
+	dataDefinitionFields.find(({name, nestedDataDefinitionFields}) => {
+		if (name === fieldName) {
+			return true;
+		} else if (nestedDataDefinitionFields.length) {
+			return findFieldByNameNested(nestedDataDefinitionFields, fieldName);
+		}
+
+		return false;
+	});
 
 export default ({dataDefinitionFields}, fieldTypeName) => {
 	let counter = 0;
