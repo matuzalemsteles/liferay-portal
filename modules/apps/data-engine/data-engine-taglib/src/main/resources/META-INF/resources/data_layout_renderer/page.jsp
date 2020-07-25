@@ -16,6 +16,10 @@
 
 <%@ include file="/data_layout_renderer/init.jsp" %>
 
+<liferay-editor:resources
+	editorName="alloyeditor"
+/>
+
 <div class="sheet">
 	<clay:container-fluid
 		cssClass="ddm-form-builder-app"
