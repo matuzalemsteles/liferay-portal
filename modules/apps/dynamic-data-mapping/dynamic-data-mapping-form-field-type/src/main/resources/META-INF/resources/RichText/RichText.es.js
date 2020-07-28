@@ -12,62 +12,18 @@
  * details.
  */
 
-import {Editor} from 'frontend-editor-ckeditor-web';
+import {ClassicEditor} from 'frontend-editor-ckeditor-web';
 import React from 'react';
 
 import {FieldBase} from '../FieldBase/ReactFieldBase.es';
 import {useSyncValue} from '../hooks/useSyncValue.es';
 
 const CKEDITOR_CONFIG = {
-	toolbar: [
-		{items: ['Undo', 'Redo'], name: 'clipboard'},
-		'/',
-		{
-			items: [
-				'Bold',
-				'Italic',
-				'Underline',
-				'Strike',
-				'-',
-				'CopyFormatting',
-				'RemoveFormat',
-			],
-			name: 'basicstyles',
-		},
-		{
-			items: [
-				'NumberedList',
-				'BulletedList',
-				'-',
-				'Outdent',
-				'Indent',
-				'-',
-				'Blockquote',
-				'-',
-				'JustifyLeft',
-				'JustifyCenter',
-				'JustifyRight',
-				'JustifyBlock',
-			],
-			name: 'paragraph',
-		},
-		{items: ['Link', 'Unlink', 'Anchor'], name: 'links'},
-		{
-			items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar'],
-			name: 'insert',
-		},
-		'/',
-		{items: ['Styles', 'Format', 'Font', 'FontSize'], name: 'styles'},
-		{items: ['TextColor', 'BGColor'], name: 'colors'},
-		{items: ['Maximize'], name: 'tools'},
-		{
-			items: ['Source'],
-			name: 'document',
-		},
-	],
+	resize_enabled: true,
 };
 
 const RichText = ({
+	editorConfig,
 	id,
 	name,
 	onChange,
@@ -80,28 +36,24 @@ const RichText = ({
 		value ? value : predefinedValue
 	);
 
-	const editorProps = {
-		config: CKEDITOR_CONFIG,
-		data: currentValue,
-	};
-
-	if (readOnly) {
-		editorProps.readOnly = true;
-		editorProps.style = {pointerEvents: 'none'};
-	}
-	else {
-		editorProps.onChange = (event) => {
-			const newValue = event.editor.getData();
-
-			setCurrentValue(newValue);
-
-			onChange(event, newValue);
-		};
-	}
-
 	return (
 		<FieldBase {...otherProps} id={id} name={name} readOnly={readOnly}>
-			<Editor {...editorProps} />
+			<ClassicEditor
+				contents={currentValue}
+				editorConfig={{
+					...editorConfig.editorConfig,
+					...CKEDITOR_CONFIG,
+					toolbar: editorConfig.editorConfig.toolbar_liferay,
+				}}
+				name={name}
+				onChange={(data) => {
+					setCurrentValue(data);
+
+					onChange({}, data);
+				}}
+				readOnly={readOnly}
+				style={readOnly ? {pointerEvents: 'none'} : {}}
+			/>
 
 			<input
 				defaultValue={currentValue}
