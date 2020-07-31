@@ -100,13 +100,19 @@ editDDMStructureURL.setParameter("mvcPath", "/edit_data_definition.jsp");
 
 			<liferay-data-engine:data-layout-builder
 				additionalPanels="<%= journalEditDDMStructuresDisplayContext.getAdditionalPanels(npmResolvedPackageName) %>"
-				componentId='<%= liferayPortletResponse.getNamespace() + "dataLayoutBuilder" %>'
+				componentId='<%= liferayPortletResponse.getNamespace() + "dataLayout" %>'
 				contentType="journal"
 				dataDefinitionId="<%= ddmStructureId %>"
 				groupId="<%= groupId %>"
 				localizable="<%= true %>"
 				namespace="<%= liferayPortletResponse.getNamespace() %>"
 				singlePage="<%= true %>"
+			/>
+
+			<liferay-frontend:component
+				componentId='<%= liferayPortletResponse.getNamespace() + "languageProxy" %>'
+				module="js/dataEngineLayoutBuilderLanguageProxy.es"
+				servletContext="<%= application %>"
 			/>
 		</clay:container-fluid>
 	</div>
@@ -131,7 +137,10 @@ editDDMStructureURL.setParameter("mvcPath", "/edit_data_definition.jsp");
 	}
 
 	function <portlet:namespace />saveDDMStructure() {
-		Liferay.componentReady('<portlet:namespace />dataLayoutBuilder').then(
+		// Verificar esse formData do <portlet:namespace />saveDDMStructure() ao fazer o getFormData() pq tá dando erro ao submeter no backend
+		// https://gist.github.com/diegonvs/9e9549e4466e7b866a6dbe9f0ad37618
+
+		Liferay.componentReady('<portlet:namespace />dataLayout').then(
 			function (dataLayoutBuilder) {
 				var name = <portlet:namespace />getInputLocalizedValues('name');
 				var formData = dataLayoutBuilder.getFormData();

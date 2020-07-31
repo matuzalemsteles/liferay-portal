@@ -100,6 +100,12 @@ renderResponse.setTitle(title);
 				localizable="<%= true %>"
 				namespace="<%= liferayPortletResponse.getNamespace() %>"
 			/>
+
+			<liferay-frontend:component
+				componentId='<%= liferayPortletResponse.getNamespace() + "dataEngineLayoutBuilderLanguageProxy" %>'
+				module="js/dataEngineLayoutBuilderLanguageProxy.es"
+				servletContext="<%= application %>"
+			/>
 		</clay:container-fluid>
 	</div>
 </aui:form>

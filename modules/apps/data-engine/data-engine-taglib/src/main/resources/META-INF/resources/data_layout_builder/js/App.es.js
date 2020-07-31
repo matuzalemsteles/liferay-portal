@@ -13,13 +13,13 @@
  */
 
 import {ClayModalProvider} from '@clayui/modal';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useImperativeHandle, useState} from 'react';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 
 import AppContext from './AppContext.es';
 import AppContextProvider from './AppContextProvider.es';
-import {UPDATE_APP_PROPS} from './actions.es';
+import {UPDATE_APP_PROPS, UPDATE_EDITING_LANGUAGE_ID} from './actions.es';
 import MultiPanelSidebar from './components/sidebar/MultiPanelSidebar.es';
 import initializeSidebarConfig from './components/sidebar/initializeSidebarConfig.es';
 import DataLayoutBuilder from './data-layout-builder/DataLayoutBuilder.es';
@@ -42,6 +42,7 @@ const parseProps = ({
 
 const AppContent = ({
 	dataLayoutBuilder,
+	forwardRef,
 	setChildrenContext,
 	setDataLayoutBuilder,
 	sidebarConfig,
@@ -68,6 +69,17 @@ const AppContent = ({
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dispatch, setChildrenContext]);
+
+	useImperativeHandle(forwardRef, () => ({
+		updateEditingLanguageId: ({editingLanguageId}) => {
+			dispatch({
+				payload: editingLanguageId,
+				type: UPDATE_EDITING_LANGUAGE_ID,
+			});
+
+			dataLayoutBuilder.onEditingLanguageIdChange({editingLanguageId});
+		}
+	}));
 
 	return (
 		<>

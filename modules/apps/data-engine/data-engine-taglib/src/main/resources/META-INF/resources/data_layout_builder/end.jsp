@@ -100,6 +100,7 @@ Map<String, Object> props = HashMapBuilder.<String, Object>put(
 
 <div id="<%= componentId + "container" %>">
 	<react:component
+		componentId="<%= componentId + "Builder" %>"
 		module="data_layout_builder/js/App.es"
 		props="<%= props %>"
 	/>

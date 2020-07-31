@@ -49,9 +49,12 @@ export default function render(renderable, renderData, container) {
 			componentId = `__UNNAMED_COMPONENT__${portletId}__${counter++}`;
 		}
 
+		const componentRef = React.createRef(null);
+
 		Liferay.component(
 			componentId,
 			{
+				componentRef,
 				destroy: () => {
 					ReactDOM.unmountComponentAtNode(container);
 				},
@@ -71,7 +74,7 @@ export default function render(renderable, renderData, container) {
 		// eslint-disable-next-line liferay-portal/no-react-dom-render
 		ReactDOM.render(
 			<ClayIconSpriteContext.Provider value={spritemap}>
-				{Component ? <Component {...renderData} /> : renderable}
+				{Component ? <Component forwardRef={componentRef} {...renderData} /> : renderable}
 			</ClayIconSpriteContext.Provider>,
 			container
 		);
