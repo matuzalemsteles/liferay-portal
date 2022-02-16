@@ -12,7 +12,9 @@
  * details.
  */
 
+import {TreeView as ClayTreeView} from '@clayui/core';
 import ClayIcon from '@clayui/icon';
+import {ClayCheckbox} from '@clayui/form';
 import ClayLayout from '@clayui/layout';
 import classNames from 'classnames';
 import {Treeview} from 'frontend-js-components-web';
@@ -30,6 +32,20 @@ import {
 const SEARCH_QUERY_MIN_LENGHT = 2;
 const SEARCH_INPUT_DEBOUNCE = 300;
 
+const nodeByName = (items, name) => {
+	return items.reduce(function reducer(acc, item) {
+		if (item.name.match(new RegExp(name, 'i'))) {
+			acc.push(item);
+		}
+
+		if (item.children) {
+			acc.concat(item.children.reduce(reducer, acc));
+		}
+
+		return acc;
+	}, []);
+};
+
 const TreeFilter = ({
 	childrenPropertyKey,
 	itemSelectorSaveEvent,
@@ -40,6 +56,9 @@ const TreeFilter = ({
 }) => {
 	const [filterQuery, setFilterQuery] = useState('');
 	const [selectedItemsCount, setSelectedItemsCount] = useState(0);
+
+	const [items, setItems] = useState(nodes);
+	const initialItemsRef = useRef(items);
 
 	const selectedNodesRef = useRef(null);
 	const refItemsCount = selectedNodesRef.current?.length || 0;
@@ -60,6 +79,26 @@ const TreeFilter = ({
 
 		return selectedNodes;
 	}, [nodes]);
+
+	const [selectedKeys, setSelectedKeys] = useState(new Set(initialSelectedNodeIds));
+
+	const expandedNodesIds = useMemo(() => {
+		const expandedNodes = [];
+
+		visit(nodes, (node) => {
+			if (
+				node.expanded ||
+				node.children?.every((childNode) => childNode.expanded)
+			) {
+				expandedNodes.push(node.id);
+			}
+		});
+
+		return expandedNodes;
+		
+	}, [nodes])
+
+	const expandedKeys = new Set(expandedNodesIds);
 
 	const computedNodes = () => {
 		if (!filterQuery || filterQuery.length < SEARCH_QUERY_MIN_LENGHT) {
@@ -137,9 +176,27 @@ const TreeFilter = ({
 	}, SEARCH_INPUT_DEBOUNCE);
 
 	const inputSearchHandler = (event) => {
-		event.persist();
+		if (!window.Liferay.__FF__.enableClayTreeView) {
+			event.persist();
 
-		debouncedSetFilterQuery(event);
+			debouncedSetFilterQuery(event);
+		}
+		else {
+			const value = event.target.value;
+
+			if (!value) {
+				setItems(initialItemsRef.current);
+
+				return;
+			}
+			else {
+				const newItems = nodeByName(initialItemsRef.current, value);
+
+				if (newItems.length) {
+					setItems(newItems);
+				}
+			}
+		}
 	};
 
 	const handleInputClear = () => {
@@ -152,6 +209,33 @@ const TreeFilter = ({
 			cancelDebounce(debouncedSetFilterQuery);
 		};
 	}, [debouncedSetFilterQuery]);
+
+	const handleTreeViewSelectionChange = (selection) => {
+		let numItems = 0;
+
+		for (let key of selection) {
+			for (let i = 0; i < nodes.length; i++) {
+				if (nodes[i].id === key && Array.isArray(nodes[i].children)) {
+					numItems += nodes[i].children.length;
+				}
+			}
+		}
+
+		setSelectedItemsCount(numItems);
+		setSelectedKeys(selection);
+
+		// TODO: format the data to be able to send it to the backend
+		// const data = {};
+
+		// const openerWindow = Liferay.Util.getOpener();
+
+		// openerWindow.Liferay.fire(itemSelectorSaveEvent, {
+		// 	data: selectedDataOutputTransfomer({
+		// 		data,
+		// 		mandatoryFieldsForFiltering,
+		// 	}),
+		// });
+	};
 
 	return (
 		<div className="tree-filter">
@@ -211,14 +295,56 @@ const TreeFilter = ({
 						className="tree-filter-type-tree"
 						id={`${portletNamespace}typeContainer`}
 					>
-						<Treeview
-							NodeComponent={Treeview.Card}
-							inheritSelection
-							initialSelectedNodeIds={initialSelectedNodeIds}
-							multiSelection
-							nodes={computedNodes()}
-							onSelectedNodesChange={handleSelectionChange}
-						/>
+					{!window.Liferay.__FF__.enableClayTreeView ? (<Treeview
+								NodeComponent={Treeview.Card}
+								inheritSelection
+								initialSelectedNodeIds={initialSelectedNodeIds}
+								multiSelection
+								nodes={computedNodes()}
+								onSelectedNodesChange={handleSelectionChange}
+							/>
+						) : (
+								<ClayTreeView
+									expandedKeys={expandedKeys}
+									items={items}
+									onItemsChange={setItems}
+									selectedKeys={selectedKeys}
+									selectionMode="multiple-recursive"
+									onSelectionChange={handleTreeViewSelectionChange}
+									showExpanderOnHover={false}
+								>
+									{(item) => (
+										<ClayTreeView.Item>
+											<ClayTreeView.ItemStack
+												onClick={(event) => {
+													// handleTreeViewSelectionChange(event, item)
+												}}
+											>
+												<ClayCheckbox />
+												<ClayIcon symbol={item.icon} />
+
+												{item.name}
+											</ClayTreeView.ItemStack>
+
+											<ClayTreeView.Group items={item.children}>
+												{(item) => (
+													<ClayTreeView.Item
+														onClick={(event) => {
+															// handleTreeViewSelectionChange(
+															// 	event,
+															// 	item
+															// )
+														}}
+													>
+														<ClayCheckbox />
+														{item.name}
+													</ClayTreeView.Item>
+												)}
+											</ClayTreeView.Group>
+										</ClayTreeView.Item>
+									)}
+								</ClayTreeView>
+						)}
 
 						{!computedNodes().length && (
 							<div className="border-0 pt-0 sheet taglib-empty-result-message">
