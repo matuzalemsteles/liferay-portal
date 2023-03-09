@@ -41,7 +41,7 @@ const getRows = (rows, nestedFields) => {
 		columns: row.columns.map((column) => {
 			return {
 				...column,
-				fields: nestedFields.filter((nestedField) =>
+				fields: nestedFields.map((field, index) => ({...field, nestedFieldIndex: index})).filter((nestedField) =>
 					column.fields.includes(nestedField.fieldName)
 				),
 			};

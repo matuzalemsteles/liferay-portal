@@ -24,11 +24,13 @@ import {PagesVisitor} from '../../../utils/visitors.es';
 import {PageProvider} from '../../hooks/usePage.es';
 import {mergeVariants} from '../../utils/merge-variants.es';
 import * as DefaultVariant from './DefaultVariant.es';
+import * as WebContentVariant from './WebContentVariant.es';
 import {Layout} from './Layout.es';
 import * as Tabbed from './TabbedVariant.es';
 import {VariantsProvider} from './VariantsContext.es';
 
 const LAYOUT_TYPES = {
+	JOURNAL: 'journal',
 	MULTI_PAGES: 'multi-pages',
 	PAGINATED: 'paginated',
 	SINGLE_PAGE: 'single-page',
@@ -38,6 +40,7 @@ const LAYOUT_TYPES = {
 };
 
 const LAYOUT_COMPONENTS_TYPES = {
+	[LAYOUT_TYPES.JOURNAL]:  WebContentVariant,
 	[LAYOUT_TYPES.MULTI_PAGES]: MultiPages,
 	[LAYOUT_TYPES.PAGINATED]: Paginated,
 	[LAYOUT_TYPES.SINGLE_PAGE]: {
