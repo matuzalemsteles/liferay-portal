@@ -1,0 +1,31 @@
+.lfr-forms {
+	&__form-view-field-repeatable-dnd {
+        padding: 10px 4px 2px 4px;
+
+		&--dragging {
+			background: transparent;
+			background-color: #f7f8f9;
+			border-radius: 0;
+			box-shadow: 0 0 0 0.125rem #80acff;
+			cursor: grabbing;
+			margin-bottom: 5px;
+			margin-top: 5px;
+			opacity: 0.5;
+			padding-top: 20px;
+		}
+	}
+
+    &__form-view-field-repeatable-dnd {
+
+            &:focus,
+		    &:focus-within,
+            &:hover {
+                background: transparent;
+                box-shadow: 0 0 0 0.125rem  #0b5fff;
+                cursor: grabbing;
+                margin-bottom: 5px;
+                border-radius: 0 4px 4px
+            }
+            
+    }
+}

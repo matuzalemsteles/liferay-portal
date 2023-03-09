@@ -26,7 +26,13 @@ import {mergeVariants} from '../../utils/merge-variants.es';
 import {Field} from '../Field/Field.es';
 import {VariantsContext} from './VariantsContext.es';
 
-export function Layout({components, editable, itemPath, rows, viewMode}) {
+export function Layout({
+	components,
+	editable,
+	itemPath,
+	rows,
+	viewMode,
+}) {
 	const {containerElement, pageIndex} = usePage();
 	const {activePage, defaultLanguageId} = useFormState();
 	const {allowNestedFields, submitButtonId} = useConfig();
@@ -36,7 +42,8 @@ export function Layout({components, editable, itemPath, rows, viewMode}) {
 
 	const variants = useContext(VariantsContext);
 
-	const Components = components ?? mergeVariants(editable, variants);
+	const Components =
+		components ?? mergeVariants(editable, variants);
 
 	return (
 		<Components.Rows
