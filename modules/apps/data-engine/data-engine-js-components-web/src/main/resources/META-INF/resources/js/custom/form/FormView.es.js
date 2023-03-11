@@ -42,6 +42,7 @@ import {evaluate} from '../../utils/evaluation.es';
 import * as Fields from '../../utils/fields.es';
 import {getFormId, getFormNode} from '../../utils/formId.es';
 import {parseProps} from '../../utils/parseProps.es';
+import DragLayer from './components/DragLayer.es';
 import {
 	objectRelationshipReducer,
 	paginationReducer,
@@ -404,7 +405,7 @@ export const FormView = React.forwardRef((props, ref) => {
 	const unstable_onEventRef = useRef(null);
 
 	return (
-		<DndProvider context={window} backend={HTML5Backend}>
+		<DndProvider backend={HTML5Backend} context={window}>
 			<ConfigProvider
 				config={config}
 				initialConfig={INITIAL_CONFIG_STATE}
@@ -434,6 +435,8 @@ export const FormView = React.forwardRef((props, ref) => {
 					]}
 					value={state}
 				>
+					<DragLayer />
+
 					<Form
 						ref={ref ?? defaultRef}
 						unstable_onEventRef={unstable_onEventRef}
