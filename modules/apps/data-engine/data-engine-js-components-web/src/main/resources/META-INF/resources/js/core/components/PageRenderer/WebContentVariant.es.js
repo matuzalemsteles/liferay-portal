@@ -14,8 +14,11 @@
 
 import ClayLayout from '@clayui/layout';
 import classnames from 'classnames';
-import React, {forwardRef} from 'react';
-import {useFormState} from '../../hooks/useForm.es';
+import React, {forwardRef, useRef} from 'react';
+import {useDrop} from 'react-dnd';
+
+import {EVENT_TYPES} from '../../../custom/form/eventTypes';
+import {useForm, useFormState} from '../../hooks/useForm.es';
 import FieldRepeatableDND from '../FieldRepeatableDND';
 
 import './WebContentVariant.scss';
@@ -87,13 +90,21 @@ export const Column = forwardRef(
 
 							if (field.repeatable) {
 								return (
-									<FieldRepeatableDND
-										field={field}
-										index={index}
-										nestedFieldIndex={field.nestedFieldIndex}
-									>
-										{children}
-									</FieldRepeatableDND>
+									<React.Fragment key={index}>
+										{index === 0 && (
+											<Placeholder field={field} index={index} nestedFieldIndex={field.nestedFieldIndex} />
+										)}
+
+										<FieldRepeatableDND
+											field={field}
+											index={index}
+											nestedFieldIndex={field.nestedFieldIndex}
+										>
+											{children}
+										</FieldRepeatableDND>
+
+										<Placeholder field={field} index={index} nestedFieldIndex={field.nestedFieldIndex} />
+									</React.Fragment>
 								);
 							}
 
@@ -109,3 +120,79 @@ export const Column = forwardRef(
 );
 
 Column.displayName = 'WebContentVariant.Column';
+
+function Placeholder({
+	field,
+	index,
+	nestedFieldIndex,
+}) {
+	const ref = useRef(null);
+	const dispatch = useForm();
+
+	const [{canDrop, overTarget}, dropRef] = useDrop({
+		accept: field.fieldName,
+		canDrop: () => {
+			return true;
+		},
+		collect: (monitor) => {
+			return {
+				overTarget: monitor.isOver({shallow: true}),
+			}
+		},
+		drop: (item, monitor) => {
+			if (!ref.current) {
+				return;
+			}
+
+			const draggedIndex = item.index;
+			const targetIndex = index;
+			const sourceFieldName = item.id;
+			const sourceNestedFieldIndex = item.nestedFieldIndex;
+			const targetNestedFieldIndex = nestedFieldIndex;
+
+			if (draggedIndex === targetIndex) {
+				return;
+			}
+
+			const targetSize = ref.current.getBoundingClientRect();
+			const targetCenter = (targetSize.bottom - targetSize.top) / 2;
+
+			const draggedOffset = monitor.getClientOffset();
+
+			if (!draggedOffset) {
+				return;
+			}
+
+			const draggedTop = draggedOffset.y - targetSize.top;
+
+			if (
+				(draggedIndex < targetIndex && draggedTop < targetCenter) ||
+				(draggedIndex > targetIndex && draggedTop > targetCenter)
+			) {
+				return;
+			}
+
+			dispatch({
+				payload: {draggedIndex, sourceFieldName, sourceNestedFieldIndex, targetIndex, targetNestedFieldIndex},
+				type: EVENT_TYPES.FORM_VIEW.REPEATABLE_FIELD.CHANGE_ORDER,
+			});
+
+			item.index = targetIndex;
+		},
+	});
+
+	return (
+		<div
+			className={classnames('lfr-forms__form-view-ddm-target', {
+				'lfr-forms__form-view-ddm-target-over': overTarget,
+			})}
+			droppable="true"
+			ref={(element) => {
+				dropRef(element);
+				ref.current = element;
+			}}
+		>
+			<span droppable="true" />
+		</div>
+	)
+}
