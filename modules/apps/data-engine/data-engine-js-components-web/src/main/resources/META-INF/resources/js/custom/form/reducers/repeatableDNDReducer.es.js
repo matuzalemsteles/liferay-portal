@@ -12,9 +12,9 @@
  * details.
  */
 
-import {EVENT_TYPES} from '../eventTypes';
+import { EVENT_TYPES } from '../eventTypes';
 
-import {getFieldIndexes, getColumn} from '../../../utils/FormSupport.es';
+import { getFieldIndexes, getColumn } from '../../../utils/FormSupport.es';
 
 import {
 	isNestedFieldName,
@@ -25,14 +25,14 @@ import {
 	updateNestedFieldNameIndex,
 } from '../../../utils/repeatable.es';
 
-import {PagesVisitor} from '../../../utils/visitors.es';
+import { PagesVisitor } from '../../../utils/visitors.es';
 
 /**
  * This reducer was created to reorder
  * repeatable fields inside the FormView on Web Content
  */
 
- export function updateNestedFieldNames(parentFieldName, nestedFields) {
+export function updateNestedFieldNames(parentFieldName, nestedFields) {
 	return (nestedFields || []).map((nestedField) => {
 		const newNestedFieldName = generateNestedFieldName(
 			nestedField.name,
@@ -58,7 +58,7 @@ import {PagesVisitor} from '../../../utils/visitors.es';
 }
 
 function updateEditorConfigFieldName(editorConfig, name) {
-	const updatedEditorConfig = {...editorConfig};
+	const updatedEditorConfig = { ...editorConfig };
 	for (const [key, value] of Object.entries(updatedEditorConfig)) {
 		if (typeof value === 'string') {
 			const parsedName = parseName(decodeURIComponent(value));
@@ -81,29 +81,29 @@ function updateEditorConfigFieldName(editorConfig, name) {
 
 function updateFieldName(name, repeatedIndex) {
 
-	return isNestedFieldName(name) 
-	? updateNestedFieldNameIndex(name, repeatedIndex) 
-	: generateName(name, {repeatedIndex});
+	return isNestedFieldName(name)
+		? updateNestedFieldNameIndex(name, repeatedIndex)
+		: generateName(name, { repeatedIndex });
 }
 
 export default function repeatableDNDReducer(state, action) {
 	switch (action.type) {
 		case EVENT_TYPES.FORM_VIEW.REPEATABLE_FIELD.CHANGE_ORDER: {
 			const {
-				draggedIndex, 
-				sourceFieldName, 
-				sourceNestedFieldIndex, 
-				targetIndex, 
+				draggedIndex,
+				sourceFieldName,
+				sourceNestedFieldIndex,
+				targetIndex,
 				targetNestedFieldIndex
 			} = action.payload;
 
-			const {pages} = state;
+			const { pages } = state;
 
 			const pageVisitor = new PagesVisitor(pages);
 
 			return {
 				pages: pageVisitor.mapColumns((column) => {
-					const reorderRepeatedField = (fields) => { 
+					const reorderRepeatedField = (fields) => {
 
 						let newFields = [...fields];
 
@@ -119,48 +119,41 @@ export default function repeatableDNDReducer(state, action) {
 								return field;
 							});
 						}
-						
-						const draggedField = newFields[sourceNestedFieldIndex ?? draggedIndex];
-						const newDraggedName = updateFieldName(draggedField.name,
-							targetIndex,
-						);
 
-						const targetField = newFields[targetNestedFieldIndex ?? targetIndex];
-						const newTargetName = updateFieldName(targetField.name,  
-							draggedIndex);	
+						const dragIndex = sourceNestedFieldIndex ?? draggedIndex;
 
-						// target indo para o dragged
+						const dropIndex = targetNestedFieldIndex ?? targetIndex;
 
-						newFields[sourceNestedFieldIndex ?? draggedIndex] = {
-							...targetField,
-							name: newTargetName,
-						}
+						const draggedField = newFields[dragIndex];			
 
-						// dragged indo para o target
+						newFields = newFields.filter((_, index) => index !== dragIndex);
 
-						newFields[targetNestedFieldIndex ?? targetIndex] = {
-							...draggedField,
-							name: newDraggedName,
-						}
+						const decIndex = dragIndex < dropIndex ? 1 : 0;
 
-						return newFields.map((field) => {
+						newFields = [...newFields.slice(0, dropIndex - decIndex),
+						draggedField,
+						...newFields.slice(dropIndex - decIndex)];
+
+						return newFields.map((field, index) => {
+							const newName = updateFieldName(field.name, index)
 							return {
 								...field,
+								name: newName,
 								nestedFields: field.nestedFields
 									? updateNestedFieldNames(
-										field.name,
+										newName,
 										field.nestedFields
 									)
 									: [],
 							};
-						}) 
+						})
 					}
-				
+
 					return {
 						...column,
 						fields: reorderRepeatedField(column.fields),
 					};
-				
+
 				}),
 			};
 		}

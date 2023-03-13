@@ -103,7 +103,7 @@ export const Column = forwardRef(
 											{children}
 										</FieldRepeatableDND>
 
-										<Placeholder field={field} index={index} nestedFieldIndex={field.nestedFieldIndex} />
+										<Placeholder field={field} index={index + 1} nestedFieldIndex={field.nestedFieldIndex ? field.nestedFieldIndex + 1 : field.nestedFieldIndex} />
 									</React.Fragment>
 								);
 							}
@@ -137,9 +137,10 @@ function Placeholder({
 		collect: (monitor) => {
 			return {
 				overTarget: monitor.isOver({shallow: true}),
+				canDrop: monitor.canDrop(),
 			}
 		},
-		drop: (item, monitor) => {
+		drop: (item) => {
 			if (!ref.current) {
 				return;
 			}
@@ -149,28 +150,6 @@ function Placeholder({
 			const sourceFieldName = item.id;
 			const sourceNestedFieldIndex = item.nestedFieldIndex;
 			const targetNestedFieldIndex = nestedFieldIndex;
-
-			if (draggedIndex === targetIndex) {
-				return;
-			}
-
-			const targetSize = ref.current.getBoundingClientRect();
-			const targetCenter = (targetSize.bottom - targetSize.top) / 2;
-
-			const draggedOffset = monitor.getClientOffset();
-
-			if (!draggedOffset) {
-				return;
-			}
-
-			const draggedTop = draggedOffset.y - targetSize.top;
-
-			if (
-				(draggedIndex < targetIndex && draggedTop < targetCenter) ||
-				(draggedIndex > targetIndex && draggedTop > targetCenter)
-			) {
-				return;
-			}
 
 			dispatch({
 				payload: {draggedIndex, sourceFieldName, sourceNestedFieldIndex, targetIndex, targetNestedFieldIndex},
@@ -184,7 +163,7 @@ function Placeholder({
 	return (
 		<div
 			className={classnames('lfr-forms__form-view-ddm-target', {
-				'lfr-forms__form-view-ddm-target-over': overTarget,
+				'lfr-forms__form-view-ddm-target-over': overTarget && canDrop,
 			})}
 			droppable="true"
 			ref={(element) => {
