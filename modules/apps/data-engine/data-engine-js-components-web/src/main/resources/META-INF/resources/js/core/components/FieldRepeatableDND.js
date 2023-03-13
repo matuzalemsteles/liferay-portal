@@ -31,9 +31,6 @@ const FieldRepeatableDND = ({
 		canDrop() {
 			return true;
 		},
-		end(item, monitor) {
-			console.log('end', item, monitor.didDrop(), monitor.getDropResult())
-		},
 		item: {
 			id: field.fieldName,
 			index,
@@ -60,6 +57,10 @@ const FieldRepeatableDND = ({
 				ref.current = element;
 			}}
 		>
+			<div className="lfr-forms__form-view-field-topbar">
+				{field.label}
+			</div>
+
 			{typeof children === 'function'
 				? children({field, index})
 				: children}

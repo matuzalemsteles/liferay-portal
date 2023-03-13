@@ -24,10 +24,10 @@ import {PagesVisitor} from '../../../utils/visitors.es';
 import {PageProvider} from '../../hooks/usePage.es';
 import {mergeVariants} from '../../utils/merge-variants.es';
 import * as DefaultVariant from './DefaultVariant.es';
-import * as WebContentVariant from './WebContentVariant.es';
 import {Layout} from './Layout.es';
 import * as Tabbed from './TabbedVariant.es';
 import {VariantsProvider} from './VariantsContext.es';
+import * as WebContentVariant from './WebContentVariant.es';
 
 const LAYOUT_TYPES = {
 	JOURNAL: 'journal',

@@ -411,9 +411,9 @@ export const FormView = React.forwardRef((props, ref) => {
 				initialConfig={INITIAL_CONFIG_STATE}
 			>
 				<FormProvider
-					init={({contentType = 'journal', paginationMode, ...otherProps}) => ({
+					init={({paginationMode, ...otherProps}) => ({
 						...otherProps,
-						paginationMode: contentType ??
+						paginationMode: config.contentType ??
 							PAGINATION_MODE_MAPPED[paginationMode] ??
 							paginationMode,
 					})}

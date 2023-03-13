@@ -136,8 +136,8 @@ function Placeholder({
 		},
 		collect: (monitor) => {
 			return {
-				overTarget: monitor.isOver({shallow: true}),
 				canDrop: monitor.canDrop(),
+				overTarget: monitor.isOver({shallow: true}),
 			}
 		},
 		drop: (item) => {
