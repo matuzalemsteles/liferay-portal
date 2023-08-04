@@ -56,7 +56,7 @@ public class ContainerTag extends BaseContainerTag {
 		else {
 			cssClasses.add("container-fluid");
 
-			if (Validator.isNotNull(_size) && !(_size == "false")) {
+			if (Validator.isNotNull(_size) && !_size.equals("false")) {
 				cssClasses.add("container-fluid-max-" + _size);
 			}
 		}
