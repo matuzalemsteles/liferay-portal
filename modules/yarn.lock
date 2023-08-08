@@ -1161,10 +1161,10 @@
     react-transition-group "^4.4.1"
     warning "^4.0.3"
 
-"@clayui/navigation-bar@3.101.0":
-  version "3.101.0"
-  resolved "https://registry.yarnpkg.com/@clayui/navigation-bar/-/navigation-bar-3.101.0.tgz#4f48e4140ca8745196ff18dde0ef919162c2347e"
-  integrity sha512-fpFLmm1ZxrIGC8wQqQqu029dhfd5r59ljCStknEACac1TPo81mZ9qyZYMxyVmIpmKBsZhyqzldHRLDvXA3kiew==
+"@clayui/navigation-bar@3.103.0":
+  version "3.103.0"
+  resolved "https://registry.yarnpkg.com/@clayui/navigation-bar/-/navigation-bar-3.103.0.tgz#72fda8220fb2b9612628633614735af592bcd9f8"
+  integrity sha512-zIkLsIGwo9Wh5qsGvxRgcwIzt60DdO2JEMCB2fo+N/iUfOqKkKS70oqwqN50HfsSoIPQH5fCgsL2RGnZRS8tcg==
   dependencies:
     "@clayui/button" "^3.100.0"
     "@clayui/icon" "^3.56.0"
